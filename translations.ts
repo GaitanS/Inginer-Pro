@@ -1,0 +1,150 @@
+import { ViewType, Language } from './types';
+
+export const TRANSLATIONS: Record<Language, Record<string, string>> = {
+  en: {
+    [ViewType.DASHBOARD]: 'Dashboard',
+    [ViewType.CALENDAR]: 'Calendar',
+    [ViewType.STATUS]: 'Status Project',
+    [ViewType.TEAM]: 'Project Team',
+    [ViewType.WORK_INSTRUCTIONS]: 'Work Instructions',
+    [ViewType.BOM]: 'BOM',
+    [ViewType.DOCUMENTATION]: 'Documentation',
+    [ViewType.EQUIPMENT]: 'Equipment List',
+    [ViewType.PROCESS_FLOW]: 'Process Flow',
+    [ViewType.CAPABILITIES]: 'Capabilities',
+    [ViewType.PFMEA]: 'PFMEA',
+    [ViewType.MSA]: 'MSA',
+    [ViewType.FAILURE_CODES]: 'Failure Code List',
+    [ViewType.EOLT]: 'EOLT Parameter',
+    [ViewType.CAPACITY]: 'Capacity Calculation',
+    
+    project: 'Project',
+    guides: 'Guides & Support',
+    askAi: 'Ask AI Assistant',
+    askPlaceholder: 'How do I calculate RPN?',
+    apiKeyRequired: 'API Key required for interactive chat.',
+    context: 'Context',
+    generating: 'Generating guide...',
+    
+    oee: 'OEE',
+    defectRate: 'Defect Rate',
+    unitsProduced: 'Units Produced',
+    uptime: 'Uptime',
+    prodTrend: 'Production Output Trend',
+    defectsDay: 'Defects by Day',
+    last7Days: 'Last 7 Days',
+    last30Days: 'Last 30 Days',
+    output: 'Output',
+    defects: 'Defects',
+
+    exportCsv: 'Export CSV',
+    partNumber: 'Part #',
+    description: 'Description',
+    quantity: 'Qty',
+    unit: 'Unit',
+    supplier: 'Supplier',
+    
+    processStep: 'Process Step',
+    failureMode: 'Failure Mode',
+    severity: 'S',
+    occurrence: 'O',
+    detection: 'D',
+    rpn: 'RPN',
+    action: 'Recommended Action',
+
+    name: 'Name',
+    model: 'Model',
+    serial: 'Serial',
+    maintenance: 'Maint Due',
+    status: 'Status',
+    
+    capUtil: 'Capacity Utilization (%)',
+    totalCap: 'Total Capacity',
+    reqLoad: 'Required Load',
+    capAnalysis: 'Analysis: SMT Line 2 is nearing capacity limits (92%). Consider scheduling overtime or offloading to Line 1 if possible.',
+    
+    docRepo: 'Document Repository',
+    noDocs: 'No documents uploaded yet. Click to upload or drag files here.',
+    uploadBtn: 'Upload File',
+    
+    systemOnline: 'System Online',
+    viewUnderConstruction: 'View Under Construction',
+    
+    // AI Prompts parts
+    aiRole: 'You are an industrial engineering assistant.',
+    aiPromptLang: 'Answer in English.'
+  },
+  ro: {
+    [ViewType.DASHBOARD]: 'Panou de Control',
+    [ViewType.CALENDAR]: 'Calendar',
+    [ViewType.STATUS]: 'Status Proiect',
+    [ViewType.TEAM]: 'Echipa Proiect',
+    [ViewType.WORK_INSTRUCTIONS]: 'Instrucțiuni de Lucru',
+    [ViewType.BOM]: 'Lista de Materiale (BOM)',
+    [ViewType.DOCUMENTATION]: 'Documentație',
+    [ViewType.EQUIPMENT]: 'Listă Echipamente',
+    [ViewType.PROCESS_FLOW]: 'Flux Tehnologic',
+    [ViewType.CAPABILITIES]: 'Capabilități',
+    [ViewType.PFMEA]: 'PFMEA',
+    [ViewType.MSA]: 'MSA',
+    [ViewType.FAILURE_CODES]: 'Coduri de Defect',
+    [ViewType.EOLT]: 'Parametri EOLT',
+    [ViewType.CAPACITY]: 'Calcul Capacitate',
+    
+    project: 'Proiect',
+    guides: 'Ghiduri și Asistență',
+    askAi: 'Întreabă Asistentul AI',
+    askPlaceholder: 'Cum calculez RPN?',
+    apiKeyRequired: 'Cheie API necesară pentru chat.',
+    context: 'Context',
+    generating: 'Se generează ghidul...',
+    
+    oee: 'OEE',
+    defectRate: 'Rată Defecte',
+    unitsProduced: 'Unități Produse',
+    uptime: 'Timp Funcționare',
+    prodTrend: 'Tendință Producție',
+    defectsDay: 'Defecte pe Zile',
+    last7Days: 'Ultimele 7 Zile',
+    last30Days: 'Ultimele 30 Zile',
+    output: 'Producție',
+    defects: 'Defecte',
+
+    exportCsv: 'Exportă CSV',
+    partNumber: 'Nr. Reper',
+    description: 'Descriere',
+    quantity: 'Cant.',
+    unit: 'UM',
+    supplier: 'Furnizor',
+    
+    processStep: 'Etapă Proces',
+    failureMode: 'Mod Defectare',
+    severity: 'S',
+    occurrence: 'O',
+    detection: 'D',
+    rpn: 'RPN',
+    action: 'Acțiune Recomandată',
+
+    name: 'Nume',
+    model: 'Model',
+    serial: 'Serie',
+    maintenance: 'Scadență Ment.',
+    status: 'Stare',
+    
+    capUtil: 'Utilizare Capacitate (%)',
+    totalCap: 'Capacitate Totală',
+    reqLoad: 'Încărcare Necesară',
+    capAnalysis: 'Analiză: Linia SMT 2 se apropie de limită (92%). Luați în considerare ore suplimentare sau mutarea producției pe Linia 1.',
+    
+    docRepo: 'Depozit Documente',
+    noDocs: 'Niciun document încărcat. Apăsați pentru a încărca.',
+    uploadBtn: 'Încarcă Fișier',
+    
+    systemOnline: 'Sistem Online',
+    viewUnderConstruction: 'Vizualizare în Construcție',
+    
+    // AI Prompts parts
+    aiRole: 'Ești un asistent inginer industrial. Răspunde în limba Română.',
+    aiPromptLang: 'Answer in Romanian.'
+  }
+};
