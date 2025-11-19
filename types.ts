@@ -2,6 +2,7 @@ export enum ViewType {
   DASHBOARD = 'DASHBOARD',
   CALENDAR = 'CALENDAR',
   STATUS = 'STATUS',
+  TASK_PRIORITIZATION = 'TASK_PRIORITIZATION',
   TEAM = 'TEAM',
   WORK_INSTRUCTIONS = 'WORK_INSTRUCTIONS',
   BOM = 'BOM',
@@ -53,4 +54,14 @@ export interface EquipmentItem {
   serialNumber: string;
   maintenanceDue: string;
   status: 'Active' | 'Maintenance' | 'Offline';
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  assignee: string;
+  priority: 'High' | 'Medium' | 'Low';
+  source: 'ProMan' | 'Teams';
+  status: 'To Do' | 'In Progress' | 'Done';
+  dueDate?: string;
 }

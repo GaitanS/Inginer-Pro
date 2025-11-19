@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { RightPanel } from './components/RightPanel';
 import { DashboardView } from './components/views/DashboardView';
+import { TaskPrioritizationView } from './components/views/TaskPrioritizationView';
 import { BomView, PfmeaView, EquipmentView, CapacityView, GenericDocView } from './components/views/TechnicalViews';
-import { ViewType, Language } from './types';
+import { ViewType, Language, Task } from './types';
 import { TRANSLATIONS } from './translations';
+import { PROJECTS, INITIAL_TASKS } from './constants';
 
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewType>(ViewType.DASHBOARD);
   const [language, setLanguage] = useState<Language>('en');
+  const [currentProject, setCurrentProject] = useState<string>(PROJECTS[0]);
+  const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
 
   const t = TRANSLATIONS[language];
 
@@ -20,7 +24,9 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (activeView) {
       case ViewType.DASHBOARD:
-        return <DashboardView language={language} />;
+        return <DashboardView language={language} tasks={tasks} />;
+      case ViewType.TASK_PRIORITIZATION:
+        return <TaskPrioritizationView tasks={tasks} onUpdateTasks={setTasks} language={language} />;
       case ViewType.BOM:
         return <BomView language={language} />;
       case ViewType.PFMEA:
@@ -63,6 +69,8 @@ const App: React.FC = () => {
         currentUser="Alex Engineer"
         language={language}
         onToggleLanguage={toggleLanguage}
+        currentProject={currentProject}
+        onProjectChange={setCurrentProject}
       />
 
       {/* Main Content Area */}

@@ -3,8 +3,8 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
   BarChart, Bar 
 } from 'recharts';
-import { Activity, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
-import { Language } from '../../types';
+import { Activity, AlertTriangle, CheckCircle, Clock, AlertCircle, MessageSquare } from 'lucide-react';
+import { Language, Task } from '../../types';
 import { TRANSLATIONS } from '../../translations';
 
 const data = [
@@ -41,10 +41,16 @@ const CustomTooltip = ({ active, payload, label, language }: any) => {
 
 interface DashboardViewProps {
   language: Language;
+  tasks?: Task[];
 }
 
-export const DashboardView: React.FC<DashboardViewProps> = ({ language }) => {
+export const DashboardView: React.FC<DashboardViewProps> = ({ language, tasks = [] }) => {
   const t = TRANSLATIONS[language];
+
+  // Get top 3 high priority or normal tasks that aren't done
+  const topTasks = tasks
+    .filter(task => task.status !== 'Done')
+    .slice(0, 3);
 
   return (
     <div className="space-y-6">
@@ -165,6 +171,46 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ language }) => {
               </BarChart>
             </ResponsiveContainer>
           </div>
+        </div>
+      </div>
+
+      {/* Task Priority Widget */}
+      <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold flex items-center gap-2">
+            <AlertCircle className="text-orange-500" size={20} />
+            {t.priorityWidgetTitle}
+          </h3>
+          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+             {t.dragToReorder} ({tasks.filter(t => t.status !== 'Done').length} pending)
+          </span>
+        </div>
+        <div className="grid grid-cols-1 gap-3">
+          {topTasks.length > 0 ? (
+            topTasks.map(task => (
+              <div key={task.id} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors">
+                <div className="flex items-center gap-3">
+                   <div className={`w-1 h-8 rounded-full ${
+                     task.priority === 'High' ? 'bg-red-500' : task.priority === 'Medium' ? 'bg-yellow-500' : 'bg-blue-500'
+                   }`}></div>
+                   <div>
+                     <p className="font-medium text-gray-800 text-sm">{task.title}</p>
+                     <p className="text-xs text-gray-500 flex items-center gap-1">
+                       {task.source === 'Teams' && <MessageSquare size={10} className="text-indigo-500"/>}
+                       {task.source === 'Teams' ? t.taskSourceTeams : t.taskSourceProMan} • Due: {task.dueDate}
+                     </p>
+                   </div>
+                </div>
+                <span className={`text-xs px-2 py-1 rounded font-medium ${
+                  task.priority === 'High' ? 'bg-red-50 text-red-600' : 'bg-yellow-50 text-yellow-600'
+                }`}>
+                  {task.priority}
+                </span>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-4 text-gray-400 text-sm italic">{t.noHighPriorityTasks}</div>
+          )}
         </div>
       </div>
     </div>

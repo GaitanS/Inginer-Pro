@@ -1,4 +1,4 @@
-import { ViewType, BomItem, PfmeaItem, EquipmentItem } from './types';
+import { ViewType, BomItem, PfmeaItem, EquipmentItem, Task } from './types';
 
 export const MOCK_BOM: BomItem[] = [
   { id: '1', partNumber: 'PCB-001', description: 'Main Control Board', quantity: 1, unit: 'PC', supplier: 'TechCircuits Inc' },
@@ -26,4 +26,12 @@ export const PROJECTS = [
   "Project Alpha - Auto ECU",
   "Project Beta - Consumer IoT",
   "Project Gamma - Medical Device"
+];
+
+export const INITIAL_TASKS: Task[] = [
+  { id: 't1', title: 'Review PFMEA for SMT Line', assignee: 'Alex Engineer', priority: 'High', source: 'ProMan', status: 'In Progress', dueDate: '2024-03-25' },
+  { id: 't2', title: 'Calibrate AOI Machine', assignee: 'Maintenance Team', priority: 'High', source: 'ProMan', status: 'To Do', dueDate: '2024-03-26' },
+  { id: 't3', title: 'Update BOM for Revision B', assignee: 'Sarah Design', priority: 'Medium', source: 'ProMan', status: 'Done', dueDate: '2024-03-20' },
+  { id: 't4', title: 'Safety Audit - Zone 4', assignee: 'Alex Engineer', priority: 'Medium', source: 'ProMan', status: 'To Do', dueDate: '2024-04-01' },
+  { id: 't5', title: 'Order Paste Mask', assignee: 'Procurement', priority: 'Low', source: 'ProMan', status: 'To Do', dueDate: '2024-04-05' },
 ];
