@@ -1,3 +1,5 @@
+import React from 'react';
+
 export enum ViewType {
   DASHBOARD = 'DASHBOARD',
   CALENDAR = 'CALENDAR',
@@ -29,11 +31,26 @@ export interface MenuItem {
 
 export interface BomItem {
   id: string;
-  partNumber: string;
+  station: string; // e.g. OP10
+  partNumber: string; // Material
   description: string;
   quantity: number;
-  unit: string;
-  supplier: string;
+  image?: string; // URL for the image
+  // Dynamic variant applicability (e.g., "Audio/FAS...")
+  variants: {
+    [variantName: string]: boolean; 
+  };
+}
+
+export interface DocHistoryItem {
+  id: string;
+  version: string;
+  register: string;
+  changes: string;
+  created: string;
+  dateCreated: string;
+  released: string;
+  dateReleased: string;
 }
 
 export interface PfmeaItem {
@@ -61,7 +78,7 @@ export interface Task {
   title: string;
   assignee: string;
   priority: 'High' | 'Medium' | 'Low';
-  source: 'ProMan' | 'Teams';
+  source: 'Inginer PRO' | 'Teams';
   status: 'To Do' | 'In Progress' | 'Done';
   dueDate?: string;
 }

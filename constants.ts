@@ -1,11 +1,164 @@
-import { ViewType, BomItem, PfmeaItem, EquipmentItem, Task } from './types';
+import { ViewType, BomItem, PfmeaItem, EquipmentItem, Task, DocHistoryItem } from './types';
 
 export const MOCK_BOM: BomItem[] = [
-  { id: '1', partNumber: 'PCB-001', description: 'Main Control Board', quantity: 1, unit: 'PC', supplier: 'TechCircuits Inc' },
-  { id: '2', partNumber: 'RES-4K7', description: 'Resistor 4.7k Ohm', quantity: 12, unit: 'PC', supplier: 'CompSource' },
-  { id: '3', partNumber: 'CAP-100U', description: 'Capacitor 100uF', quantity: 4, unit: 'PC', supplier: 'CompSource' },
-  { id: '4', partNumber: 'HS-ALU', description: 'Aluminum Heat Sink', quantity: 1, unit: 'PC', supplier: 'MetalWorks' },
-  { id: '5', partNumber: 'SCR-M3', description: 'Screw M3x10', quantity: 8, unit: 'PC', supplier: 'FastenersCo' },
+  { 
+    id: '1', 
+    station: 'OP10', 
+    partNumber: '13059-036/0000', 
+    quantity: 2, 
+    description: 'Ax', 
+    variants: {
+      '90122-032/0000': true,
+      '90122-034/0000': true,
+      '90122-035/0000': true,
+      '90122-037/0000': true,
+      '90122-033/0000': true,
+      '90122-036/0000': true
+    }
+  },
+  { 
+    id: '2', 
+    station: 'OP10', 
+    partNumber: '12620-736/0000', 
+    quantity: 2, 
+    description: 'Carcasa ax', 
+    variants: {
+      '90122-032/0000': true,
+      '90122-034/0000': true,
+      '90122-035/0000': true,
+      '90122-037/0000': true,
+      '90122-033/0000': true,
+      '90122-036/0000': true
+    }
+  },
+  { 
+    id: '3', 
+    station: 'OP20', 
+    partNumber: '10013-651/0000', 
+    quantity: 2, 
+    description: 'Arc', 
+    variants: {
+      '90122-032/0000': true,
+      '90122-034/0000': true,
+      '90122-035/0000': true,
+      '90122-037/0000': true,
+      '90122-033/0000': true,
+      '90122-036/0000': true
+    }
+  },
+  { 
+    id: '4', 
+    station: 'OP30', 
+    partNumber: '12331-482/0000', 
+    quantity: 1, 
+    description: 'Bezel scroll stanga mat', 
+    variants: {
+      '90122-032/0000': true,
+      '90122-034/0000': true,
+      '90122-035/0000': true,
+      '90122-037/0000': true,
+      '90122-033/0000': true,
+      '90122-036/0000': true
+    }
+  },
+  { 
+    id: '5', 
+    station: 'OP30', 
+    partNumber: '12331-483/0000', 
+    quantity: 1, 
+    description: 'Bezel scroll dreapta mat', 
+    variants: {
+      '90122-032/0000': true,
+      '90122-034/0000': true,
+      '90122-035/0000': true,
+      '90122-037/0000': true,
+      '90122-033/0000': true,
+      '90122-036/0000': true
+    }
+  },
+  { 
+    id: '6', 
+    station: 'OP40', 
+    partNumber: '13073-141/0000', 
+    quantity: 2, 
+    description: 'Rotita scroll mat', 
+    variants: {
+      '90122-032/0000': true,
+      '90122-034/0000': true,
+      '90122-035/0000': true,
+      '90122-037/0000': true,
+      '90122-033/0000': true,
+      '90122-036/0000': true
+    }
+  },
+  { 
+    id: '7', 
+    station: 'OP60', 
+    partNumber: '12620-734/0000', 
+    quantity: 1, 
+    description: 'Carcasa Stranga', 
+    variants: {
+      '90122-032/0000': true,
+      '90122-034/0000': true,
+      '90122-035/0000': true,
+      '90122-037/0000': true,
+      '90122-033/0000': true,
+      '90122-036/0000': true
+    }
+  },
+  { 
+    id: '8', 
+    station: 'OP60', 
+    partNumber: '05055-276/0000', 
+    quantity: 2, 
+    description: 'Lever', 
+    variants: {
+      '90122-032/0000': true,
+      '90122-034/0000': true,
+      '90122-035/0000': true,
+      '90122-037/0000': true,
+      '90122-033/0000': true,
+      '90122-036/0000': true
+    }
+  },
+  { 
+    id: '9', 
+    station: 'OP110', 
+    partNumber: '12331-481/0001', 
+    quantity: 1, 
+    description: 'Back cover right', 
+    variants: {
+      '90122-032/0000': true,
+      '90122-034/0000': true,
+      '90122-035/0000': true,
+      '90122-037/0000': true,
+      '90122-033/0000': true,
+      '90122-036/0000': true
+    }
+  }
+];
+
+export const MOCK_HISTORY: DocHistoryItem[] = [
+  {
+    id: '1',
+    version: '00',
+    register: 'Formular BOM',
+    changes: 'Emitere document',
+    created: 'Pakot Laszlo',
+    dateCreated: '19.09.2012',
+    released: 'Braga Cristian',
+    dateReleased: '19.09.2012'
+  },
+  {
+    id: '2',
+    version: '01',
+    register: 'Formular BOM',
+    changes: 'Actualizare document si transpunere in noul template',
+    created: 'Asandulesei Vladut',
+    dateCreated: '15.04.2022',
+    released: 'Apostolescu Marius',
+    dateReleased: '15.04.2022'
+  }
 ];
 
 export const MOCK_PFMEA: PfmeaItem[] = [
@@ -23,15 +176,15 @@ export const MOCK_EQUIPMENT: EquipmentItem[] = [
 ];
 
 export const PROJECTS = [
-  "Project Alpha - Auto ECU",
-  "Project Beta - Consumer IoT",
-  "Project Gamma - Medical Device"
+  "10546- SK38xFaceLift",
+  "10547- VW Passat B9",
+  "10548- Audi A4 B10"
 ];
 
 export const INITIAL_TASKS: Task[] = [
-  { id: 't1', title: 'Review PFMEA for SMT Line', assignee: 'Alex Engineer', priority: 'High', source: 'ProMan', status: 'In Progress', dueDate: '2024-03-25' },
-  { id: 't2', title: 'Calibrate AOI Machine', assignee: 'Maintenance Team', priority: 'High', source: 'ProMan', status: 'To Do', dueDate: '2024-03-26' },
-  { id: 't3', title: 'Update BOM for Revision B', assignee: 'Sarah Design', priority: 'Medium', source: 'ProMan', status: 'Done', dueDate: '2024-03-20' },
-  { id: 't4', title: 'Safety Audit - Zone 4', assignee: 'Alex Engineer', priority: 'Medium', source: 'ProMan', status: 'To Do', dueDate: '2024-04-01' },
-  { id: 't5', title: 'Order Paste Mask', assignee: 'Procurement', priority: 'Low', source: 'ProMan', status: 'To Do', dueDate: '2024-04-05' },
+  { id: 't1', title: 'Review PFMEA for SMT Line', assignee: 'Alex Engineer', priority: 'High', source: 'Inginer PRO', status: 'In Progress', dueDate: '2024-03-25' },
+  { id: 't2', title: 'Calibrate AOI Machine', assignee: 'Maintenance Team', priority: 'High', source: 'Inginer PRO', status: 'To Do', dueDate: '2024-03-26' },
+  { id: 't3', title: 'Update BOM for Revision B', assignee: 'Sarah Design', priority: 'Medium', source: 'Inginer PRO', status: 'Done', dueDate: '2024-03-20' },
+  { id: 't4', title: 'Safety Audit - Zone 4', assignee: 'Alex Engineer', priority: 'Medium', source: 'Inginer PRO', status: 'To Do', dueDate: '2024-04-01' },
+  { id: 't5', title: 'Order Paste Mask', assignee: 'Procurement', priority: 'Low', source: 'Inginer PRO', status: 'To Do', dueDate: '2024-04-05' },
 ];

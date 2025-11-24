@@ -3,15 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ProMan Dashboard</title>
+    <title>Inginer PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f8fafc;
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,700&display=swap" rel="stylesheet">
+    <!-- ExcelJS for advanced Excel export with images -->
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+    <!-- PapaParse for robust CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Roboto', 'Arial', 'sans-serif'],
+            },
+            colors: {
+              preh: {
+                petrol: '#37819f',      // Primary Digital
+                'petrol-dark': '#2c677f',
+                'grey-blue': '#53738c', // Primary/Claim Color
+                grey: '#777777',        // Primary Digital Grey
+                'light-grey': '#adadad',
+                'light-blue': '#70c6e4', // Secondary Digital
+                'pastel-green': '#a2c4b3', // Secondary Digital
+                'dark-yellow': '#cfc291', // Secondary Digital
+                'grey-blue-light': '#7a98b0',
+                'dark-bg': '#111827',    // Gray 900
+                'dark-surface': '#1f2937', // Gray 800
+                'dark-surface-hover': '#374151', // Gray 700
+                'dark-border': '#4b5563',   // Gray 600
+                'dark-text': '#f3f4f6',     // Gray 100
+                'dark-text-muted': '#9ca3af' // Gray 400
+              }
+            }
+          }
+        }
       }
-    </style>
+    </script>
   <script type="importmap">
 {
   "imports": {
@@ -20,12 +50,43 @@
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
     "recharts": "https://aistudiocdn.com/recharts@^3.4.1",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs"
   }
 }
 </script>
+<style>
+  /* Custom Scrollbar for Webkit */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent; 
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1; 
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8; 
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+  
+  body {
+    background-color: #f9fafb; /* Light mode bg */
+  }
+  .dark body {
+    background-color: #111827; /* Dark mode bg */
+  }
+</style>
 </head>
-  <body>
+  <body class="text-gray-900 dark:text-gray-100 transition-colors duration-200">
     <div id="root"></div>
   </body>
 </html>

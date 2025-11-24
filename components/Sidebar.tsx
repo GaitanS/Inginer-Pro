@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   LayoutDashboard, Calendar, CheckCircle, Users, 
-  ChevronDown, Globe, ListOrdered
+  ChevronDown, Globe, ListOrdered, Moon, Sun, Cpu
 } from 'lucide-react';
 import { ViewType, MenuItem, Language } from '../types';
 import { TRANSLATIONS } from '../translations';
@@ -15,6 +15,8 @@ interface SidebarProps {
   onToggleLanguage: () => void;
   currentProject: string;
   onProjectChange: (project: string) => void;
+  isDarkMode: boolean;
+  toggleDarkMode: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ 
@@ -24,7 +26,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   language, 
   onToggleLanguage,
   currentProject,
-  onProjectChange
+  onProjectChange,
+  isDarkMode,
+  toggleDarkMode
 }) => {
   const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -65,23 +69,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <div className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col flex-shrink-0 shadow-sm text-sm">
-      {/* Header / Project Selector */}
-      <div className="p-4 border-b border-gray-200">
+    <div className="h-screen w-64 bg-white dark:bg-preh-dark-surface border-r border-gray-200 dark:border-preh-dark-border flex flex-col flex-shrink-0 shadow-xl text-sm font-sans transition-colors duration-200 z-20">
+      {/* Brand Area with Dynamic Logos */}
+      <div className="px-6 pt-6 pb-4">
+        {/* Light Mode Logo */}
+        <div className="dark:hidden flex items-center gap-2.5">
+           <div className="bg-preh-petrol text-white p-1.5 rounded shadow-sm">
+             <Cpu size={22} strokeWidth={2.5} />
+           </div>
+           <div className="flex flex-col leading-none">
+             <span className="font-bold text-xl text-gray-800 tracking-tight">Inginer</span>
+             <span className="font-extrabold text-xl text-preh-petrol tracking-widest -mt-1">PRO</span>
+           </div>
+        </div>
+        
+        {/* Dark Mode Logo */}
+        <div className="hidden dark:flex items-center gap-2.5">
+           <div className="bg-preh-light-blue text-gray-900 p-1.5 rounded shadow-sm shadow-preh-light-blue/20">
+             <Cpu size={22} strokeWidth={2.5} />
+           </div>
+           <div className="flex flex-col leading-none">
+             <span className="font-bold text-xl text-white tracking-tight">Inginer</span>
+             <span className="font-extrabold text-xl text-preh-light-blue tracking-widest -mt-1">PRO</span>
+           </div>
+        </div>
+      </div>
+
+      {/* Project Selector */}
+      <div className="px-4 pb-4 border-b border-gray-200 dark:border-preh-dark-border">
         <div className="relative" ref={dropdownRef}>
-          <div 
+          <button 
             onClick={() => setIsProjectMenuOpen(!isProjectMenuOpen)}
-            className="font-bold text-lg mb-2 border-2 border-black p-1 flex justify-between items-center cursor-pointer hover:bg-gray-50 select-none"
+            className="w-full font-medium text-sm text-preh-petrol dark:text-preh-light-blue border border-preh-light-grey/30 dark:border-gray-600 rounded-md p-2.5 flex justify-between items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-preh-dark-surface-hover transition-colors"
           >
             <span className="truncate">{currentProject}</span>
             <ChevronDown 
               size={16} 
               className={`transition-transform duration-200 ${isProjectMenuOpen ? 'rotate-180' : ''}`} 
             />
-          </div>
+          </button>
           
           {isProjectMenuOpen && (
-            <div className="absolute top-full left-0 w-full bg-white border border-gray-200 shadow-xl rounded-md z-50 max-h-60 overflow-y-auto mt-1">
+            <div className="absolute top-full left-0 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 shadow-xl rounded-md z-50 max-h-60 overflow-y-auto mt-1">
               {PROJECTS.map((proj) => (
                 <div 
                   key={proj}
@@ -89,8 +118,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onProjectChange(proj);
                     setIsProjectMenuOpen(false);
                   }}
-                  className={`px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm truncate ${
-                    currentProject === proj ? 'text-blue-700 font-medium bg-blue-50' : 'text-gray-700'
+                  className={`px-3 py-2 cursor-pointer text-sm truncate transition-colors ${
+                    currentProject === proj 
+                      ? 'text-preh-petrol font-medium bg-preh-light-blue/10 dark:bg-preh-petrol/20' 
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   {proj}
@@ -99,42 +130,62 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           )}
         </div>
-        <div className="text-gray-600 font-medium px-1 flex justify-between items-center">
-          <span>{currentUser}</span>
-          <button onClick={onToggleLanguage} className="flex items-center gap-1 hover:text-blue-600">
-            <Globe size={14} />
-            <span className="text-xs uppercase">{language}</span>
-          </button>
+        
+        {/* Controls */}
+        <div className="text-preh-grey dark:text-gray-400 mt-4 px-1 flex justify-between items-center">
+          <span className="text-xs font-medium flex items-center gap-2">
+            <div className="w-6 h-6 rounded-full bg-preh-petrol text-white flex items-center justify-center text-[10px]">AE</div>
+            <span className="truncate max-w-[80px]">{currentUser.split(' ')[0]}</span>
+          </span>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={onToggleLanguage} 
+              className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 hover:text-preh-petrol dark:hover:text-preh-light-blue transition-colors"
+              title="Switch Language"
+            >
+              <Globe size={16} />
+              <span className="sr-only">Language</span>
+            </button>
+            <button 
+              onClick={toggleDarkMode} 
+              className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 hover:text-preh-petrol dark:hover:text-preh-light-blue transition-colors"
+              title="Toggle Theme"
+            >
+              {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
+              <span className="sr-only">Theme</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Scrollable Menu Area */}
-      <div className="flex-1 overflow-y-auto py-4">
+      {/* Menu Items */}
+      <div className="flex-1 overflow-y-auto py-4 custom-scrollbar">
         
         {/* Main Menu */}
-        <div className="mb-6 px-4">
+        <div className="mb-6 px-3">
+          <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 px-3">Main</h3>
           {mainMenuItems.map((item) => (
             <React.Fragment key={item.id}>
               <button
                 onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center space-x-3 px-2 py-2 rounded-md mb-1 transition-colors ${
+                className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-md mb-1 transition-all duration-200 ${
                   activeView === item.id 
-                    ? 'bg-blue-50 text-blue-700 font-semibold' 
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-preh-petrol text-white shadow-md' 
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-preh-dark-surface-hover hover:text-preh-petrol dark:hover:text-white'
                 }`}
               >
                 {item.icon}
-                <span>{item.label}</span>
+                <span className="font-medium">{item.label}</span>
               </button>
               
               {/* Sub-item for Status Project */}
               {item.id === ViewType.STATUS && (
                  <button
                  onClick={() => onNavigate(ViewType.TASK_PRIORITIZATION)}
-                 className={`w-full flex items-center space-x-3 px-2 py-2 rounded-md mb-1 ml-4 transition-colors border-l-2 border-gray-100 ${
+                 className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md mb-1 ml-4 mt-1 transition-colors border-l-2 ${
                    activeView === ViewType.TASK_PRIORITIZATION
-                     ? 'bg-blue-50 text-blue-700 font-semibold border-blue-300' 
-                     : 'text-gray-600 hover:bg-gray-100'
+                     ? 'border-preh-petrol text-preh-petrol dark:text-preh-light-blue font-medium bg-gray-50 dark:bg-gray-800' 
+                     : 'border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:text-preh-petrol dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800'
                  }`}
                >
                  <ListOrdered size={16} />
@@ -145,33 +196,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ))}
         </div>
 
-        <div className="border-t border-gray-200 my-2"></div>
+        <div className="border-t border-gray-200 dark:border-preh-dark-border mx-4 mb-4"></div>
 
         {/* Technical Menu */}
-        <div className="px-4 mt-4">
-          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 px-2">Technical Modules</h3>
+        <div className="px-3">
+          <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 px-3">Technical</h3>
           {techMenuItems.map((item) => (
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`w-full flex items-center space-x-3 px-2 py-1.5 rounded-md mb-1 transition-colors ${
+              className={`w-full flex items-center space-x-3 px-2 py-2 rounded-md mb-1 transition-colors group ${
                 activeView === item.id 
-                  ? 'bg-blue-50 text-blue-700 font-semibold' 
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-gray-100 dark:bg-preh-dark-surface-hover text-preh-petrol dark:text-preh-light-blue font-bold' 
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-preh-dark-surface-hover hover:text-preh-petrol dark:hover:text-white'
               }`}
             >
-              <span className="flex items-center justify-center w-5 h-5 rounded bg-gray-100 text-[10px] font-bold text-gray-500">
+              <span className={`flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold transition-colors flex-shrink-0 ${
+                activeView === item.id 
+                  ? 'bg-preh-petrol text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-300 dark:group-hover:bg-gray-600'
+              }`}>
                 {item.number}
               </span>
-              <span>{item.label}</span>
+              <span className="truncate">{item.label}</span>
             </button>
           ))}
         </div>
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-200 text-xs text-gray-400 text-center">
-        ProMan System v2.4.1
+      <div className="p-4 border-t border-gray-200 dark:border-preh-dark-border text-[10px] text-gray-400 dark:text-gray-500 text-center">
+        Inginer PRO v1.0
       </div>
     </div>
   );

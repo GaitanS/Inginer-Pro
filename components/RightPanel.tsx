@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleGenAI } from "@google/genai";
 import { ViewType, Language } from '../types';
-import { Loader2, Send, Sparkles, BookOpen } from 'lucide-react';
+import { Loader2, Send, Sparkles, BookOpen, XCircle } from 'lucide-react';
 import { TRANSLATIONS } from '../translations';
 
 interface RightPanelProps {
@@ -15,11 +15,9 @@ export const RightPanel: React.FC<RightPanelProps> = ({ activeView, language }) 
   const [userQuery, setUserQuery] = useState("");
   const t = TRANSLATIONS[language];
   
-  // Context-aware initial message based on active tab
   useEffect(() => {
-    setGuideContent(""); // Clear previous content
+    setGuideContent(""); 
     const fetchGuide = async () => {
-       // Only simulate initial fetch if we have an API key, otherwise show static
        if (!process.env.API_KEY) {
          setGuideContent(getStaticGuide(activeView, language));
          return;
@@ -37,7 +35,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({ activeView, language }) 
          setGuideContent(response.text || "No content generated.");
        } catch (error) {
          console.error("Gemini Error:", error);
-         setGuideContent(getStaticGuide(activeView, language)); // Fallback
+         setGuideContent(getStaticGuide(activeView, language));
        } finally {
          setLoading(false);
        }
@@ -71,35 +69,35 @@ export const RightPanel: React.FC<RightPanelProps> = ({ activeView, language }) 
   };
 
   return (
-    <div className="w-80 bg-white border-l border-gray-200 flex flex-col h-screen shadow-sm">
-      <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
-        <h3 className="font-bold text-gray-800 flex items-center gap-2">
-          <BookOpen size={18} />
+    <div className="w-80 bg-white dark:bg-preh-dark-surface border-l border-gray-200 dark:border-preh-dark-border flex flex-col h-screen shadow-xl z-30 transition-colors duration-200">
+      <div className="p-4 border-b border-gray-200 dark:border-preh-dark-border flex items-center justify-between bg-gray-50 dark:bg-gray-800">
+        <h3 className="font-bold text-gray-800 dark:text-white flex items-center gap-2">
+          <BookOpen size={18} className="text-preh-petrol dark:text-preh-light-blue"/>
           {t.guidesTitle}
         </h3>
       </div>
 
-      <div className="flex-1 p-4 overflow-y-auto prose prose-sm max-w-none text-gray-600">
-        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-          {t.context}: {t[activeView]}
+      <div className="flex-1 p-5 overflow-y-auto prose prose-sm max-w-none text-gray-600 dark:text-gray-300 prose-strong:text-gray-900 dark:prose-strong:text-white prose-headings:text-gray-800 dark:prose-headings:text-white">
+        <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">
+          {t.context}: <span className="text-preh-petrol dark:text-preh-light-blue">{t[activeView]}</span>
         </h4>
         
         {loading && !guideContent ? (
-          <div className="flex items-center justify-center h-20 text-blue-500">
+          <div className="flex items-center justify-center h-32 text-preh-petrol dark:text-preh-light-blue">
             <Loader2 className="animate-spin mr-2" /> {t.generating}
           </div>
         ) : (
-          <div className="whitespace-pre-wrap leading-relaxed">
+          <div className="whitespace-pre-wrap leading-relaxed text-sm">
              {guideContent}
           </div>
         )}
       </div>
 
       {/* AI Input Area */}
-      <div className="p-4 border-t border-gray-200 bg-gray-50">
-        <div className="text-xs text-gray-500 mb-2 flex items-center gap-1">
-          <Sparkles size={12} className="text-purple-500" />
-          <span>{t.askAi}</span>
+      <div className="p-4 border-t border-gray-200 dark:border-preh-dark-border bg-gray-50 dark:bg-gray-800">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
+          <Sparkles size={12} className="text-preh-petrol dark:text-preh-light-blue" />
+          <span className="font-medium">{t.askAi}</span>
         </div>
         <div className="flex gap-2">
           <input 
@@ -107,27 +105,29 @@ export const RightPanel: React.FC<RightPanelProps> = ({ activeView, language }) 
             value={userQuery}
             onChange={(e) => setUserQuery(e.target.value)}
             placeholder={t.askPlaceholder}
-            className="flex-1 text-sm border border-gray-300 rounded p-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="flex-1 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-preh-petrol placeholder-gray-400 dark:placeholder-gray-500"
             onKeyDown={(e) => e.key === 'Enter' && handleAskAi()}
             disabled={!process.env.API_KEY}
           />
           <button 
             onClick={handleAskAi}
             disabled={loading || !process.env.API_KEY}
-            className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:opacity-50"
+            className="bg-preh-petrol text-white p-2 rounded-md hover:bg-preh-grey-blue disabled:opacity-50 transition-colors shadow-sm"
           >
-            {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+            {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
           </button>
         </div>
         {!process.env.API_KEY && (
-          <p className="text-[10px] text-red-400 mt-1">{t.apiKeyRequired}</p>
+          <p className="text-[10px] text-red-500 dark:text-red-400 mt-2 flex items-center gap-1">
+            <XCircle size={10} />
+            {t.apiKeyRequired}
+          </p>
         )}
       </div>
     </div>
   );
 };
 
-// Fallback content if no API key
 function getStaticGuide(view: ViewType, language: Language): string {
   const isRo = language === 'ro';
   switch (view) {
