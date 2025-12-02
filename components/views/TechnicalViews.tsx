@@ -1,9 +1,10 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { MOCK_EQUIPMENT, MOCK_PFMEA } from '../../constants';
+import { MOCK_EQUIPMENT, MOCK_PFMEA, DEFAULT_COLORS } from '../../constants';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Language, BomItem, DocHistoryItem, VisualAidMetadata, VariantDefinition } from '../../types';
 import { TRANSLATIONS } from '../../translations';
-import { Download, Upload, FileSpreadsheet, Image as ImageIcon, Search, Plus, Trash2, Minus, FileText, FileCheck, CheckSquare, Square } from 'lucide-react';
+import { Download, Upload, FileSpreadsheet, Image as ImageIcon, Search, Plus, Trash2, Minus, FileText, FileCheck, CheckSquare, Square, Check, X } from 'lucide-react';
 
 // NOTE: ExcelJS, PapaParse, docx, jspdf, and FileSaver are loaded globally via CDN in index.html
 declare global {
@@ -68,6 +69,14 @@ function hexToRgb(hex: string) {
   } : { r: 255, g: 255, b: 255 };
 }
 
+// Helper to calculate contrast color (black or white)
+function getContrastColor(hexColor: string) {
+  const rgb = hexToRgb(hexColor);
+  // Calculate brightness (YIQ formula)
+  const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+  return brightness > 128 ? '#000000' : '#FFFFFF';
+}
+
 // --- 2# BOM ---
 export const BomView: React.FC<BomViewProps> = ({ 
   language, 
@@ -85,6 +94,10 @@ export const BomView: React.FC<BomViewProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const sapInputRef = useRef<HTMLInputElement>(null);
   const [activeImageRowId, setActiveImageRowId] = useState<string | null>(null);
+
+  // State for adding new column
+  const [isAddingColumn, setIsAddingColumn] = useState(false);
+  const [newColNameInput, setNewColNameInput] = useState("");
 
   // --- Handlers for SAP Import ---
   const handleSapImportClick = () => {
@@ -173,9 +186,11 @@ export const BomView: React.FC<BomViewProps> = ({
     variantDefinitions.forEach((def, idx) => {
       // Convert Hex #RRGGBB to ARGB FFRRGGBB
       const argbColor = 'FF' + def.color.replace('#', '').toUpperCase();
+      const textColor = getContrastColor(def.color) === '#FFFFFF' ? 'FFFFFFFF' : 'FF000000';
+      
       const cell = headerRow.getCell(varColIndex + idx);
       cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argbColor } };
-      cell.font = { bold: true, color: { argb: 'FF000000' }, size: 10 };
+      cell.font = { bold: true, color: { argb: textColor }, size: 10 };
       cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
       cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} };
     });
@@ -207,12 +222,15 @@ export const BomView: React.FC<BomViewProps> = ({
           const def = variantDefinitions[variantIdx];
           if (def) {
             const argbColor = 'FF' + def.color.replace('#', '').toUpperCase();
+            const contrastColor = getContrastColor(def.color);
+            const fontArgb = contrastColor === '#FFFFFF' ? 'FFFFFFFF' : 'FF1F4E78'; // Use Dark Blue if bg is light, White if bg is dark
+
             // Background matches header
             cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argbColor } };
             
             if (cell.value === 'X') {
-              // Large Dark Blue X as in screenshot
-              cell.font = { size: 28, bold: true, color: { argb: 'FF1F4E78' } }; 
+              // Large X
+              cell.font = { size: 28, bold: true, color: { argb: fontArgb } }; 
             }
           }
         } else {
@@ -287,16 +305,44 @@ export const BomView: React.FC<BomViewProps> = ({
     setBomItems(prev => prev.filter(item => item.id !== id));
   };
 
-  const handleAddColumn = () => {
-    if(activeTab !== 'BOM') return;
-    const newColName = prompt(t.newVariant);
-    if (newColName && !variantDefinitions.some(v => v.name === newColName)) {
-      setVariantDefinitions(prev => [...prev, { name: newColName, color: '#FFFFFF' }]);
-      setBomItems(prevItems => prevItems.map(item => ({
-        ...item,
-        variants: { ...item.variants, [newColName]: false }
-      })));
+  const startAddColumn = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsAddingColumn(true);
+    setNewColNameInput("");
+  };
+
+  const cancelAddColumn = (e?: React.MouseEvent) => {
+    if(e) e.stopPropagation();
+    setIsAddingColumn(false);
+    setNewColNameInput("");
+  };
+
+  const confirmAddColumn = (e?: React.MouseEvent) => {
+    if(e) e.stopPropagation();
+    const trimmedName = newColNameInput.trim();
+    if (!trimmedName) {
+      setIsAddingColumn(false);
+      return;
     }
+    // Check for duplicates case-insensitive
+    if (variantDefinitions.some(v => v.name.toLowerCase() === trimmedName.toLowerCase())) {
+      alert("Variant already exists!");
+      return;
+    }
+    const randomColor = DEFAULT_COLORS[variantDefinitions.length % DEFAULT_COLORS.length];
+    
+    // Update Definitions
+    const newDef = { name: trimmedName, color: randomColor };
+    setVariantDefinitions(prev => [...prev, newDef]);
+    
+    // Update existing items
+    setBomItems(prevItems => prevItems.map(item => ({
+      ...item,
+      variants: { ...item.variants, [trimmedName]: false }
+    })));
+    
+    setIsAddingColumn(false);
+    setNewColNameInput("");
   };
 
   const handleDeleteColumn = (keyToRemove: string) => {
@@ -410,55 +456,81 @@ export const BomView: React.FC<BomViewProps> = ({
                 <th className="p-3 border-b border-gray-200 dark:border-gray-700 whitespace-nowrap min-w-[120px] text-center border-r dark:border-gray-700">{t.qty}</th>
                 <th className="p-3 border-b border-gray-200 dark:border-gray-700 whitespace-nowrap min-w-[300px] border-r dark:border-gray-700">{t.desc}</th>
                 <th className="p-3 border-b border-gray-200 dark:border-gray-700 whitespace-nowrap min-w-[100px] text-center border-r dark:border-gray-700">{t.picture}</th>
-                {variantDefinitions.map((def, index) => (
-                  <th key={def.name} 
-                      className="p-2 border-b border-gray-200 dark:border-gray-700 whitespace-nowrap text-center min-w-[120px] text-xs text-gray-800 dark:text-white border-r border-gray-200 dark:border-gray-700 group relative transition-colors duration-300"
-                      style={{ backgroundColor: def.color }}
-                  >
-                    <div className="flex items-center justify-between gap-1 px-1">
-                      <span className="truncate flex-1 font-bold">{def.name}</span>
-                      <div className="flex items-center bg-white/50 rounded p-0.5">
-                        <input
-                          type="color"
-                          value={def.color}
-                          onChange={(e) => handleVariantColorChange(def.name, e.target.value)}
-                          className="w-4 h-4 p-0 border-0 bg-transparent cursor-pointer mr-1"
-                          onClick={(e) => e.stopPropagation()}
-                          title="Change Column Color"
-                        />
-                        <button 
-                          onClick={(e) => { e.stopPropagation(); handleDeleteColumn(def.name); }}
-                          className="text-red-600 hover:bg-red-200 rounded p-0.5 transition-colors"
-                          title="Delete Column"
-                        >
-                          <Minus size={12} />
-                        </button>
+                {variantDefinitions.map((def, index) => {
+                  const textColor = getContrastColor(def.color);
+                  return (
+                    <th key={def.name} 
+                        className="p-2 border-b border-gray-200 dark:border-gray-700 whitespace-nowrap text-center min-w-[120px] text-xs border-r border-gray-200 dark:border-gray-700 group relative transition-colors duration-300"
+                        style={{ backgroundColor: def.color, color: textColor }}
+                    >
+                      <div className="flex items-center justify-between gap-1 px-1">
+                        <span className="truncate flex-1 font-bold">{def.name}</span>
+                        <div className="flex items-center bg-white/50 rounded p-0.5">
+                          <input
+                            type="color"
+                            value={def.color}
+                            onChange={(e) => handleVariantColorChange(def.name, e.target.value)}
+                            className="w-4 h-4 p-0 border-0 bg-transparent cursor-pointer mr-1"
+                            onClick={(e) => e.stopPropagation()}
+                            title="Change Column Color"
+                          />
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); handleDeleteColumn(def.name); }}
+                            className="text-red-600 hover:bg-red-200 rounded p-0.5 transition-colors"
+                            title="Delete Column"
+                          >
+                            <Minus size={12} />
+                          </button>
+                        </div>
                       </div>
+                    </th>
+                  );
+                })}
+                <th className={`p-2 border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 transition-all duration-200 ${isAddingColumn ? 'min-w-[150px]' : 'w-10'}`}>
+                  {isAddingColumn ? (
+                    <div className="flex items-center gap-1">
+                      <input 
+                        autoFocus
+                        type="text" 
+                        value={newColNameInput}
+                        onChange={(e) => setNewColNameInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') confirmAddColumn(e as any);
+                          if (e.key === 'Escape') cancelAddColumn(e as any);
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-full p-1 text-xs border rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:border-preh-petrol"
+                        placeholder="Variant..."
+                      />
+                      <button onClick={confirmAddColumn} className="text-green-600 hover:text-green-800 p-1"><Check size={14} /></button>
+                      <button onClick={cancelAddColumn} className="text-red-500 hover:text-red-700 p-1"><X size={14} /></button>
                     </div>
-                  </th>
-                ))}
-                <th className="p-2 border-b border-gray-200 dark:border-gray-700 w-10 bg-gray-100 dark:bg-gray-800">
-                  <button onClick={handleAddColumn} className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full text-preh-petrol">
-                    <Plus size={18} />
-                  </button>
+                  ) : (
+                    <button onClick={startAddColumn} className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full text-preh-petrol" title={t.addColumn}>
+                      <Plus size={18} />
+                    </button>
+                  )}
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
               {bomItems.map((item, idx) => (
                 <tr key={item.id} className={`transition-colors ${idx % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-800/50'}`}>
-                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.station} onChange={(e) => handleBomTextChange(item.id, 'station', e.target.value)} className="w-full h-full p-3 bg-transparent text-center font-bold text-gray-600 dark:text-gray-100 focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
+                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.station} onChange={(e) => handleBomTextChange(item.id, 'station', e.target.value)} className="w-full h-full p-3 bg-transparent text-center font-bold text-gray-600 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
                   <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.partNumber} onChange={(e) => handleBomTextChange(item.id, 'partNumber', e.target.value)} className="w-full h-full p-3 bg-transparent font-mono text-preh-petrol dark:text-preh-light-blue font-medium focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
-                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="number" value={item.quantity} onChange={(e) => handleBomTextChange(item.id, 'quantity', parseFloat(e.target.value) || 0)} className="w-full h-full p-3 bg-transparent text-center font-bold text-gray-700 dark:text-gray-100 focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
-                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.description} onChange={(e) => handleBomTextChange(item.id, 'description', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-800 dark:text-gray-100 font-medium focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
+                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="number" value={item.quantity} onChange={(e) => handleBomTextChange(item.id, 'quantity', parseFloat(e.target.value) || 0)} className="w-full h-full p-3 bg-transparent text-center font-bold text-gray-700 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
+                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.description} onChange={(e) => handleBomTextChange(item.id, 'description', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-800 dark:text-white font-medium focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
                   <td className="p-2 border-r border-gray-100 dark:border-gray-700 text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => handleImageClick(item.id)}>
                     {item.image ? <img src={item.image} alt="Part" className="h-10 w-10 object-contain mx-auto rounded border border-gray-200 bg-white" /> : <div className="h-8 w-8 mx-auto bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center text-gray-400"><ImageIcon size={16} /></div>}
                   </td>
-                  {variantDefinitions.map((def, index) => (
-                    <td key={def.name} onDoubleClick={() => handleVariantToggle(item.id, def.name)} className="p-3 border-r border-gray-100 dark:border-gray-700 text-center cursor-pointer select-none hover:bg-white/50 transition-colors duration-300" style={{ backgroundColor: def.color }}>
-                      {item.variants[def.name] ? <span className="font-bold text-lg text-gray-900 dark:text-white drop-shadow-sm">X</span> : null}
-                    </td>
-                  ))}
+                  {variantDefinitions.map((def, index) => {
+                    const contrastColor = getContrastColor(def.color);
+                    return (
+                      <td key={def.name} onDoubleClick={() => handleVariantToggle(item.id, def.name)} className="p-3 border-r border-gray-100 dark:border-gray-700 text-center cursor-pointer select-none hover:bg-white/50 transition-colors duration-300" style={{ backgroundColor: def.color }}>
+                        {item.variants[def.name] ? <span className="font-bold text-lg drop-shadow-sm" style={{ color: contrastColor }}>X</span> : null}
+                      </td>
+                    );
+                  })}
                   <td className="p-0 bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700 text-center">
                     <button onClick={(e) => { e.stopPropagation(); handleDeleteRow(item.id); }} className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-colors"><Minus size={16} /></button>
                   </td>
@@ -466,7 +538,7 @@ export const BomView: React.FC<BomViewProps> = ({
               ))}
               <tr>
                  <td colSpan={5 + variantDefinitions.length + 1} className="p-2 bg-gray-50 dark:bg-gray-900">
-                    <button onClick={handleAddRow} className="flex items-center gap-2 text-xs text-gray-500 hover:text-preh-petrol p-2"><Plus size={14} /> {t.addRow}</button>
+                    <button onClick={handleAddRow} className="flex items-center gap-2 text-xs text-gray-500 hover:text-preh-petrol p-2 dark:text-gray-400 dark:hover:text-white"><Plus size={14} /> {t.addRow}</button>
                  </td>
               </tr>
             </tbody>
@@ -500,7 +572,7 @@ export const BomView: React.FC<BomViewProps> = ({
                ))}
                <tr>
                  <td colSpan={7} className="p-2 bg-gray-50 dark:bg-gray-900">
-                    <button onClick={handleAddHistoryRow} className="flex items-center gap-2 text-xs text-gray-500 hover:text-preh-petrol p-2"><Plus size={14} /> {t.addRow}</button>
+                    <button onClick={handleAddHistoryRow} className="flex items-center gap-2 text-xs text-gray-500 hover:text-preh-petrol p-2 dark:text-gray-400 dark:hover:text-white"><Plus size={14} /> {t.addRow}</button>
                  </td>
               </tr>
             </tbody>

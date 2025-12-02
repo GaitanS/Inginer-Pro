@@ -188,3 +188,16 @@ export const INITIAL_TASKS: Task[] = [
   { id: 't4', title: 'Safety Audit - Zone 4', assignee: 'Alex Engineer', priority: 'Medium', source: 'Inginer PRO', status: 'To Do', dueDate: '2024-04-01' },
   { id: 't5', title: 'Order Paste Mask', assignee: 'Procurement', priority: 'Low', source: 'Inginer PRO', status: 'To Do', dueDate: '2024-04-05' },
 ];
+
+export const DEFAULT_COLORS = [
+  '#bdd7ee', // Blue
+  '#a9d08e', // Green
+  '#ffff99', // Yellow
+  '#f4b084', // Orange
+  '#cc99ff', // Purple
+  '#99ffff', // Teal
+  '#e2f0d9', 
+  '#deebf7', 
+  '#fff2cc', 
+  '#fbe5d6'
+];

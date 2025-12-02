@@ -6,7 +6,7 @@ import { TaskPrioritizationView } from './components/views/TaskPrioritizationVie
 import { BomView, VisualAidsView, PfmeaView, EquipmentView, CapacityView, GenericDocView } from './components/views/TechnicalViews';
 import { ViewType, Language, Task, BomItem, DocHistoryItem, VariantDefinition } from './types';
 import { TRANSLATIONS } from './translations';
-import { PROJECTS, INITIAL_TASKS, MOCK_BOM, MOCK_HISTORY } from './constants';
+import { PROJECTS, INITIAL_TASKS, MOCK_BOM, MOCK_HISTORY, DEFAULT_COLORS } from './constants';
 
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewType>(ViewType.DASHBOARD);
@@ -24,16 +24,6 @@ const App: React.FC = () => {
   });
   const [historyItems, setHistoryItems] = useState<DocHistoryItem[]>(MOCK_HISTORY);
   
-  // Default pastel colors for initialization
-  const DEFAULT_COLORS = [
-    '#bdd7ee', // Blue
-    '#a9d08e', // Green
-    '#ffff99', // Yellow
-    '#f4b084', // Orange
-    '#cc99ff', // Purple
-    '#99ffff', // Teal
-  ];
-
   const [variantDefinitions, setVariantDefinitions] = useState<VariantDefinition[]>(() => {
     const uniqueKeys = Array.from(new Set(MOCK_BOM.flatMap(item => Object.keys(item.variants))));
     return uniqueKeys.map((key, index) => ({
