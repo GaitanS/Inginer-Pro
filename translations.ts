@@ -9,6 +9,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     [ViewType.TEAM]: 'Project Team',
     [ViewType.WORK_INSTRUCTIONS]: 'Work Instructions',
     [ViewType.BOM]: 'BOM',
+    [ViewType.VISUAL_AIDS]: 'Visual Aids',
     [ViewType.DOCUMENTATION]: 'Documentation',
     [ViewType.EQUIPMENT]: 'Equipment List',
     [ViewType.PROCESS_FLOW]: 'Process Flow',
@@ -63,6 +64,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     // BOM specific
     sheetBom: 'BOM',
     sheetHistory: 'Document History',
+    sheetVisualAids: '2.1 Visual Aids',
     version: 'Version',
     register: 'Register',
     changes: 'Changes',
@@ -75,6 +77,18 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     deleteRow: 'Delete Row',
     deleteColumn: 'Delete Column',
     confirmDelete: 'Are you sure?',
+    
+    // Visual Aids
+    vaDateCreated: 'Date Created',
+    vaCreatedBy: 'Created by',
+    vaCheckedBy: 'Checked by',
+    vaApprovedBy: 'Approved by',
+    vaReleaseDate: 'Release Date',
+    exportVisualAids: '1. Export Visual Aids per Station',
+    exportMaster: '2. Export Master Visual Aid',
+    generatingDocs: 'Generating Documents...',
+    docsGenerated: 'Documents Generated!',
+    masterGenerated: 'Master Document Generated!',
     
     processStep: 'Process Step',
     failureMode: 'Failure Mode',
@@ -114,6 +128,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     [ViewType.TEAM]: 'Echipa Proiect',
     [ViewType.WORK_INSTRUCTIONS]: 'Instrucțiuni de Lucru',
     [ViewType.BOM]: 'Lista de Materiale (BOM)',
+    [ViewType.VISUAL_AIDS]: 'Ajutoare Vizuale',
     [ViewType.DOCUMENTATION]: 'Documentație',
     [ViewType.EQUIPMENT]: 'Listă Echipamente',
     [ViewType.PROCESS_FLOW]: 'Flux Tehnologic',
@@ -168,6 +183,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     // BOM specific
     sheetBom: 'BOM',
     sheetHistory: 'Document History',
+    sheetVisualAids: '2.1 Visual Aids',
     version: 'Versiune',
     register: 'Inregistrare',
     changes: 'Modificare',
@@ -180,6 +196,18 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     deleteRow: 'Șterge Rând',
     deleteColumn: 'Șterge Coloană',
     confirmDelete: 'Sigur dorești să ștergi?',
+
+    // Visual Aids
+    vaDateCreated: 'Data Creării',
+    vaCreatedBy: 'Creat de',
+    vaCheckedBy: 'Verificat de',
+    vaApprovedBy: 'Aprobat de',
+    vaReleaseDate: 'Data Lansării',
+    exportVisualAids: '1. Export Visual Aids per Station',
+    exportMaster: '2. Export Master Visual Aid',
+    generatingDocs: 'Se generează documentele...',
+    docsGenerated: 'Documente Generate!',
+    masterGenerated: 'Document Master Generat!',
     
     processStep: 'Etapă Proces',
     failureMode: 'Mod Defectare',

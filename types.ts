@@ -8,6 +8,7 @@ export enum ViewType {
   TEAM = 'TEAM',
   WORK_INSTRUCTIONS = 'WORK_INSTRUCTIONS',
   BOM = 'BOM',
+  VISUAL_AIDS = 'VISUAL_AIDS',
   DOCUMENTATION = 'DOCUMENTATION',
   EQUIPMENT = 'EQUIPMENT',
   PROCESS_FLOW = 'PROCESS_FLOW',
@@ -36,10 +37,16 @@ export interface BomItem {
   description: string;
   quantity: number;
   image?: string; // URL for the image
+  visualAidBgColor?: string; // Hex color for Visual Aid background
   // Dynamic variant applicability (e.g., "Audio/FAS...")
   variants: {
     [variantName: string]: boolean; 
   };
+}
+
+export interface VariantDefinition {
+  name: string;
+  color: string; // Hex Code e.g. #FF0000
 }
 
 export interface DocHistoryItem {
@@ -51,6 +58,15 @@ export interface DocHistoryItem {
   dateCreated: string;
   released: string;
   dateReleased: string;
+}
+
+export interface VisualAidMetadata {
+  dateCreated: string;
+  createdBy: string;
+  checkedBy: string;
+  approvedBy: string;
+  releaseDate: string;
+  version: string;
 }
 
 export interface PfmeaItem {

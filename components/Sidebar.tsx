@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   LayoutDashboard, Calendar, CheckCircle, Users, 
-  ChevronDown, Globe, ListOrdered, Moon, Sun, Cpu
+  ChevronDown, Globe, ListOrdered, Moon, Sun, Cpu, ChevronRight
 } from 'lucide-react';
 import { ViewType, MenuItem, Language } from '../types';
 import { TRANSLATIONS } from '../translations';
@@ -31,9 +31,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
   toggleDarkMode
 }) => {
   const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(false);
+  const [isBomExpanded, setIsBomExpanded] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   
   const t = TRANSLATIONS[language];
+
+  useEffect(() => {
+    // Auto-expand BOM if Visual Aids is active
+    if (activeView === ViewType.VISUAL_AIDS) {
+      setIsBomExpanded(true);
+    }
+  }, [activeView]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -67,6 +75,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: ViewType.EOLT, label: t[ViewType.EOLT], number: 10, category: 'technical' },
     { id: ViewType.CAPACITY, label: t[ViewType.CAPACITY], number: 11, category: 'technical' },
   ];
+
+  const handleMenuClick = (item: MenuItem) => {
+    if (item.id === ViewType.BOM) {
+      setIsBomExpanded(!isBomExpanded);
+      onNavigate(ViewType.BOM);
+    } else {
+      onNavigate(item.id);
+    }
+  };
 
   return (
     <div className="h-screen w-64 bg-white dark:bg-preh-dark-surface border-r border-gray-200 dark:border-preh-dark-border flex flex-col flex-shrink-0 shadow-xl text-sm font-sans transition-colors duration-200 z-20">
@@ -202,24 +219,54 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="px-3">
           <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 px-3">Technical</h3>
           {techMenuItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => onNavigate(item.id)}
-              className={`w-full flex items-center space-x-3 px-2 py-2 rounded-md mb-1 transition-colors group ${
-                activeView === item.id 
-                  ? 'bg-gray-100 dark:bg-preh-dark-surface-hover text-preh-petrol dark:text-preh-light-blue font-bold' 
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-preh-dark-surface-hover hover:text-preh-petrol dark:hover:text-white'
-              }`}
-            >
-              <span className={`flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold transition-colors flex-shrink-0 ${
-                activeView === item.id 
-                  ? 'bg-preh-petrol text-white' 
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-300 dark:group-hover:bg-gray-600'
-              }`}>
-                {item.number}
-              </span>
-              <span className="truncate">{item.label}</span>
-            </button>
+            <React.Fragment key={item.id}>
+              <button
+                onClick={() => handleMenuClick(item)}
+                className={`w-full flex items-center justify-between space-x-3 px-2 py-2 rounded-md mb-1 transition-colors group ${
+                  activeView === item.id 
+                    ? 'bg-gray-100 dark:bg-preh-dark-surface-hover text-preh-petrol dark:text-preh-light-blue font-bold' 
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-preh-dark-surface-hover hover:text-preh-petrol dark:hover:text-white'
+                }`}
+              >
+                <div className="flex items-center space-x-3 overflow-hidden">
+                  <span className={`flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold transition-colors flex-shrink-0 ${
+                    activeView === item.id 
+                      ? 'bg-preh-petrol text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-300 dark:group-hover:bg-gray-600'
+                  }`}>
+                    {item.number}
+                  </span>
+                  <span className="truncate">{item.label}</span>
+                </div>
+                {item.id === ViewType.BOM && (
+                  <ChevronRight size={14} className={`transition-transform duration-200 ${isBomExpanded ? 'rotate-90' : ''}`} />
+                )}
+              </button>
+
+              {/* Sub-item for BOM -> Visual Aids */}
+              {item.id === ViewType.BOM && isBomExpanded && (
+                <button
+                  onClick={() => onNavigate(ViewType.VISUAL_AIDS)}
+                  className={`w-full flex items-center space-x-3 px-2 py-2 rounded-md mb-1 ml-4 mt-[-4px] transition-colors group relative ${
+                    activeView === ViewType.VISUAL_AIDS 
+                      ? 'bg-gray-50 dark:bg-preh-dark-surface-hover/50 text-preh-petrol dark:text-preh-light-blue font-bold' 
+                      : 'text-gray-500 dark:text-gray-400 hover:text-preh-petrol dark:hover:text-white'
+                  }`}
+                >
+                  {/* Indentation line */}
+                  <div className="absolute left-[-10px] top-[-10px] bottom-[50%] w-[12px] border-l-2 border-b-2 border-gray-200 dark:border-gray-600 rounded-bl-md"></div>
+                  
+                  <span className={`flex items-center justify-center min-w-[28px] h-5 rounded px-1 text-[10px] font-bold transition-colors flex-shrink-0 ${
+                    activeView === ViewType.VISUAL_AIDS 
+                      ? 'bg-preh-light-blue/20 text-preh-petrol dark:text-preh-light-blue' 
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 group-hover:bg-gray-200 dark:group-hover:bg-gray-600'
+                  }`}>
+                    2.1
+                  </span>
+                  <span className="truncate text-xs">{t[ViewType.VISUAL_AIDS]}</span>
+                </button>
+              )}
+            </React.Fragment>
           ))}
         </div>
       </div>

@@ -3,10 +3,10 @@ import { Sidebar } from './components/Sidebar';
 import { RightPanel } from './components/RightPanel';
 import { DashboardView } from './components/views/DashboardView';
 import { TaskPrioritizationView } from './components/views/TaskPrioritizationView';
-import { BomView, PfmeaView, EquipmentView, CapacityView, GenericDocView } from './components/views/TechnicalViews';
-import { ViewType, Language, Task } from './types';
+import { BomView, VisualAidsView, PfmeaView, EquipmentView, CapacityView, GenericDocView } from './components/views/TechnicalViews';
+import { ViewType, Language, Task, BomItem, DocHistoryItem, VariantDefinition } from './types';
 import { TRANSLATIONS } from './translations';
-import { PROJECTS, INITIAL_TASKS } from './constants';
+import { PROJECTS, INITIAL_TASKS, MOCK_BOM, MOCK_HISTORY } from './constants';
 
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewType>(ViewType.DASHBOARD);
@@ -14,6 +14,33 @@ const App: React.FC = () => {
   const [currentProject, setCurrentProject] = useState<string>(PROJECTS[0]);
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Shared BOM State - Initialize with default visual aid color if missing
+  const [bomItems, setBomItems] = useState<BomItem[]>(() => {
+    return MOCK_BOM.map(item => ({
+      ...item,
+      visualAidBgColor: item.visualAidBgColor || '#CCFFFF' // Default Light Cyan
+    }));
+  });
+  const [historyItems, setHistoryItems] = useState<DocHistoryItem[]>(MOCK_HISTORY);
+  
+  // Default pastel colors for initialization
+  const DEFAULT_COLORS = [
+    '#bdd7ee', // Blue
+    '#a9d08e', // Green
+    '#ffff99', // Yellow
+    '#f4b084', // Orange
+    '#cc99ff', // Purple
+    '#99ffff', // Teal
+  ];
+
+  const [variantDefinitions, setVariantDefinitions] = useState<VariantDefinition[]>(() => {
+    const uniqueKeys = Array.from(new Set(MOCK_BOM.flatMap(item => Object.keys(item.variants))));
+    return uniqueKeys.map((key, index) => ({
+      name: key,
+      color: DEFAULT_COLORS[index % DEFAULT_COLORS.length]
+    }));
+  });
 
   const t = TRANSLATIONS[language];
 
@@ -40,7 +67,29 @@ const App: React.FC = () => {
       case ViewType.TASK_PRIORITIZATION:
         return <TaskPrioritizationView tasks={tasks} onUpdateTasks={setTasks} language={language} />;
       case ViewType.BOM:
-        return <BomView language={language} />;
+        return (
+          <BomView 
+            language={language} 
+            isDarkMode={isDarkMode}
+            bomItems={bomItems}
+            setBomItems={setBomItems}
+            historyItems={historyItems}
+            setHistoryItems={setHistoryItems}
+            variantDefinitions={variantDefinitions}
+            setVariantDefinitions={setVariantDefinitions}
+          />
+        );
+      case ViewType.VISUAL_AIDS:
+        return (
+          <VisualAidsView 
+            language={language} 
+            isDarkMode={isDarkMode} 
+            currentProject={currentProject} 
+            bomItems={bomItems}
+            setBomItems={setBomItems}
+            variantDefinitions={variantDefinitions}
+          />
+        );
       case ViewType.PFMEA:
         return <PfmeaView language={language} />;
       case ViewType.EQUIPMENT:
