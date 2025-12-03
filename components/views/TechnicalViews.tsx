@@ -4,7 +4,7 @@ import { MOCK_EQUIPMENT_DATA, MOCK_EQUIPMENT_IPS, MOCK_PFMEA, DEFAULT_COLORS } f
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Language, BomItem, DocHistoryItem, VisualAidMetadata, VariantDefinition, EquipmentItem, EquipmentIpGroup } from '../../types';
 import { TRANSLATIONS } from '../../translations';
-import { Download, Upload, FileSpreadsheet, Image as ImageIcon, Search, Plus, Trash2, Minus, FileText, FileCheck, CheckSquare, Square, Check, X as XIcon, ShieldCheck, Network, FolderOpen, ChevronDown, ChevronRight, CheckCircle2, FileType } from 'lucide-react';
+import { Download, Upload, FileSpreadsheet, Image as ImageIcon, Search, Plus, Trash2, Minus, FileText, FileCheck, CheckSquare, Square, Check, X as XIcon, ShieldCheck, Network, FolderOpen, ChevronDown, ChevronRight, CheckCircle2, FileType, Circle } from 'lucide-react';
 
 declare global {
   interface Window {
@@ -95,8 +95,156 @@ function getContrastColor(hexColor: string) {
 // --- 1# Documentation (IATF Checklist) ---
 export const DocumentationView: React.FC<ViewProps> = ({ language }) => {
   const t = TRANSLATIONS[language];
-  // Placeholder implementation for brevity
-  return <div className="p-6">Documentation View (IATF Checklist implementation)</div>; 
+  const [checklist, setChecklist] = useState<Record<string, boolean>>({});
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    general: true,
+    electrical: false,
+    maintenance: false,
+    quality: false,
+    safety: false,
+    training: false,
+    iatf2025: true
+  });
+
+  // Checklist Structure mapped to Translation Keys
+  const sections = [
+    {
+      id: 'general',
+      title: 'docGeneral',
+      desc: 'docGeneralDesc',
+      items: ['docUserManual', 'docLayout', 'docTechSpecs']
+    },
+    {
+      id: 'electrical',
+      title: 'docElectrical',
+      desc: 'docElectricalDesc',
+      items: ['docEPlan', 'docPneumatic', 'docIOList', 'docBackup', 'docAlarmList']
+    },
+    {
+      id: 'maintenance',
+      title: 'docMaintenance',
+      desc: 'docMaintenanceDesc',
+      items: ['docPMPlan', 'docSpareParts', 'docMechDrawings']
+    },
+    {
+      id: 'quality',
+      title: 'docQuality',
+      desc: 'docQualityDesc',
+      items: ['docCE', 'docRisk', 'docCapability', 'docMSA', 'docParams']
+    },
+    {
+      id: 'safety',
+      title: 'docSafety',
+      desc: 'docSafetyDesc',
+      items: ['docSafetyVal', 'docLOTO']
+    },
+    {
+      id: 'training',
+      title: 'docTraining',
+      desc: 'docTrainingDesc',
+      items: ['docTrainingMat', 'docTrainingReg']
+    },
+    {
+      id: 'iatf2025',
+      title: 'iatf2025',
+      desc: '', // Special highlight
+      items: ['docTraceability', 'docCybersecurity']
+    }
+  ];
+
+  // Load from local storage
+  useEffect(() => {
+    const saved = localStorage.getItem('inginer_pro_doc_checklist');
+    if (saved) {
+      try {
+        setChecklist(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to load checklist", e);
+      }
+    }
+  }, []);
+
+  // Save to local storage
+  const toggleItem = (key: string) => {
+    const newState = { ...checklist, [key]: !checklist[key] };
+    setChecklist(newState);
+    localStorage.setItem('inginer_pro_doc_checklist', JSON.stringify(newState));
+  };
+
+  const toggleSection = (id: string) => {
+    setExpandedSections(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  // Progress Calculation
+  const totalItems = sections.reduce((acc, sec) => acc + sec.items.length, 0);
+  const checkedItems = Object.values(checklist).filter(Boolean).length;
+  const progress = Math.round((checkedItems / totalItems) * 100);
+
+  return (
+    <div className="space-y-6 pb-10">
+      {/* Header Card */}
+      <div className="bg-white dark:bg-preh-dark-surface p-6 rounded-lg border border-gray-200 dark:border-preh-dark-border shadow-sm">
+        <div className="flex justify-between items-end mb-4">
+          <div>
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+              <FolderOpen className="text-preh-petrol" />
+              {t.docRepo}
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">IATF 16949:2016 & 2025 Compliance Tracker</p>
+          </div>
+          <div className="text-right">
+            <span className="text-2xl font-bold text-preh-petrol dark:text-preh-light-blue">{progress}%</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400 block">{t.docComplete}</span>
+          </div>
+        </div>
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+          <div className="bg-preh-petrol dark:bg-preh-light-blue h-2.5 rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
+        </div>
+      </div>
+
+      {/* Checklist Sections */}
+      <div className="grid grid-cols-1 gap-4">
+        {sections.map(section => (
+          <div key={section.id} className={`bg-white dark:bg-preh-dark-surface rounded-lg border ${section.id === 'iatf2025' ? 'border-preh-petrol dark:border-preh-light-blue ring-1 ring-preh-petrol dark:ring-preh-light-blue' : 'border-gray-200 dark:border-preh-dark-border'} shadow-sm overflow-hidden transition-all`}>
+            <button 
+              onClick={() => toggleSection(section.id)}
+              className={`w-full p-4 flex items-center justify-between transition-colors ${section.id === 'iatf2025' ? 'bg-preh-petrol/5 dark:bg-preh-petrol/20' : 'hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+            >
+              <div className="flex items-center gap-3">
+                {section.id === 'iatf2025' ? <ShieldCheck className="text-preh-petrol dark:text-preh-light-blue" /> : <FileText size={20} className="text-gray-400 dark:text-gray-500" />}
+                <div className="text-left">
+                  <h3 className="font-bold text-gray-800 dark:text-gray-100">{t[section.title]}</h3>
+                  {section.desc && <p className="text-xs text-gray-500 dark:text-gray-400">{t[section.desc]}</p>}
+                </div>
+              </div>
+              <ChevronDown className={`text-gray-400 transition-transform ${expandedSections[section.id] ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {expandedSections[section.id] && (
+              <div className="p-4 pt-0 border-t border-gray-100 dark:border-gray-700 bg-gray-50/30 dark:bg-black/10">
+                <div className="space-y-3 mt-3">
+                  {section.items.map(itemKey => (
+                    <div 
+                      key={itemKey} 
+                      className="flex items-center gap-3 p-2 rounded hover:bg-white dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
+                      onClick={() => toggleItem(itemKey)}
+                    >
+                      <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${checklist[itemKey] ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-800'}`}>
+                        {checklist[itemKey] && <Check size={14} strokeWidth={3} />}
+                      </div>
+                      <span className={`text-sm ${checklist[itemKey] ? 'text-gray-500 line-through dark:text-gray-500' : 'text-gray-700 dark:text-gray-200'}`}>
+                        {t[itemKey]}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 // --- 3# BOM View ---
@@ -675,6 +823,12 @@ export const EquipmentMainView: React.FC<EquipmentPhotosViewProps> = ({ language
     setEquipmentItems(prev => prev.filter(item => item.id !== id));
   };
 
+  const calculateCompletion = (item: EquipmentItem) => {
+    const fields = ['station', 'owner', 'eqNumber', 'powerSupply', 'powerKw', 'airSupplyBar', 'airSupplyDiam'];
+    const filled = fields.filter(f => item[f as keyof EquipmentItem]?.trim() !== '').length;
+    return Math.round((filled / fields.length) * 100);
+  };
+
   return (
     <div className="bg-white dark:bg-preh-dark-surface rounded-lg border border-gray-200 dark:border-preh-dark-border shadow-sm p-6 overflow-hidden flex flex-col h-full">
       <div className="flex justify-between items-center mb-4">
@@ -694,26 +848,33 @@ export const EquipmentMainView: React.FC<EquipmentPhotosViewProps> = ({ language
               <th className="p-3 border-b dark:border-gray-700 min-w-[80px] border-r dark:border-gray-700">{t.powerKw}</th>
               <th className="p-3 border-b dark:border-gray-700 min-w-[120px] border-r dark:border-gray-700">{t.airSupplyBar}</th>
               <th className="p-3 border-b dark:border-gray-700 min-w-[180px] border-r dark:border-gray-700">{t.airSupplyDiam}</th>
+              <th className="p-3 border-b dark:border-gray-700 w-24 text-center">%</th>
               <th className="p-3 border-b dark:border-gray-700 w-12"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-            {equipmentItems.map((item, idx) => (
-              <tr key={item.id} className={`transition-colors group ${idx % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800'}`}>
-                <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.station} onChange={(e) => handleChange(item.id, 'station', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
-                <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.owner} onChange={(e) => handleChange(item.id, 'owner', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
-                <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.eqNumber} onChange={(e) => handleChange(item.id, 'eqNumber', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
-                <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.powerSupply} onChange={(e) => handleChange(item.id, 'powerSupply', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
-                <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.powerKw} onChange={(e) => handleChange(item.id, 'powerKw', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
-                <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.airSupplyBar} onChange={(e) => handleChange(item.id, 'airSupplyBar', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
-                <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.airSupplyDiam} onChange={(e) => handleChange(item.id, 'airSupplyDiam', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
-                <td className="p-0 text-center">
-                  <button onClick={() => handleDelete(item.id)} className="p-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Trash2 size={16} />
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {equipmentItems.map((item, idx) => {
+              const completion = calculateCompletion(item);
+              return (
+                <tr key={item.id} className={`transition-colors group ${idx % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800'}`}>
+                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.station} onChange={(e) => handleChange(item.id, 'station', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
+                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.owner} onChange={(e) => handleChange(item.id, 'owner', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
+                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.eqNumber} onChange={(e) => handleChange(item.id, 'eqNumber', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
+                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.powerSupply} onChange={(e) => handleChange(item.id, 'powerSupply', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
+                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.powerKw} onChange={(e) => handleChange(item.id, 'powerKw', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
+                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.airSupplyBar} onChange={(e) => handleChange(item.id, 'airSupplyBar', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
+                  <td className="p-0 border-r border-gray-100 dark:border-gray-700"><input type="text" value={item.airSupplyDiam} onChange={(e) => handleChange(item.id, 'airSupplyDiam', e.target.value)} className="w-full h-full p-3 bg-transparent text-gray-900 dark:text-white focus:bg-blue-50 dark:focus:bg-gray-700 focus:outline-none"/></td>
+                  <td className="p-2 text-center border-r border-gray-100 dark:border-gray-700">
+                    <span className={`text-xs font-bold ${completion === 100 ? 'text-green-600' : 'text-orange-500'}`}>{completion}%</span>
+                  </td>
+                  <td className="p-0 text-center">
+                    <button onClick={() => handleDelete(item.id)} className="p-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Trash2 size={16} />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -743,47 +904,67 @@ export const EquipmentIPsView: React.FC<EquipmentIPsViewProps> = ({ language, eq
     setEquipmentIPs(newIPs);
   };
 
+  const calculateGroupCompletion = (group: EquipmentIpGroup) => {
+    if (group.devices.length === 0) return 0;
+    const totalFields = group.devices.length * 3;
+    let filledFields = 0;
+    group.devices.forEach(d => {
+      if (d.equipment) filledFields++;
+      if (d.name) filledFields++;
+      if (d.ip) filledFields++;
+    });
+    return Math.round((filledFields / totalFields) * 100);
+  };
+
   return (
     <div className="bg-white dark:bg-preh-dark-surface rounded-lg border border-gray-200 dark:border-preh-dark-border shadow-sm p-6 overflow-auto h-full space-y-8">
       <h2 className="text-xl font-bold mb-6 text-gray-800 dark:text-white">{t.EQUIPMENT_IPS}</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {equipmentIPs.map((group, groupIdx) => (
-          <div key={group.id} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden flex flex-col shadow-sm">
-            <div className="bg-gray-100 dark:bg-gray-800 p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-              <h3 className="font-bold text-lg text-gray-800 dark:text-white">{group.station}</h3>
-              <button onClick={() => addDeviceToGroup(groupIdx)} className="text-preh-petrol hover:text-preh-grey-blue p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"><Plus size={16}/></button>
-            </div>
-            <table className="w-full text-sm text-left">
-              <thead className="bg-gray-50 dark:bg-gray-900/50 text-gray-600 dark:text-gray-300">
-                <tr>
-                  <th className="p-2 border-b dark:border-gray-700 w-1/3">{t.equipName}</th>
-                  <th className="p-2 border-b dark:border-gray-700 w-1/3">{t.name}</th>
-                  <th className="p-2 border-b dark:border-gray-700 w-1/3">{t.equipIp}</th>
-                  <th className="p-2 border-b dark:border-gray-700 w-8"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                {group.devices.map((device, devIdx) => (
-                  <tr key={devIdx} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 group">
-                    <td className="p-0 border-r dark:border-gray-700">
-                      <input value={device.equipment} onChange={(e) => handleIpChange(groupIdx, devIdx, 'equipment', e.target.value)} className="w-full bg-transparent p-2 focus:outline-none dark:text-gray-200" />
-                    </td>
-                    <td className="p-0 border-r dark:border-gray-700">
-                      <input value={device.name} onChange={(e) => handleIpChange(groupIdx, devIdx, 'name', e.target.value)} className="w-full bg-transparent p-2 focus:outline-none dark:text-gray-200" />
-                    </td>
-                    <td className="p-0 border-r dark:border-gray-700">
-                      <input value={device.ip} onChange={(e) => handleIpChange(groupIdx, devIdx, 'ip', e.target.value)} className="w-full bg-transparent p-2 focus:outline-none font-mono text-preh-petrol dark:text-preh-light-blue" />
-                    </td>
-                    <td className="p-0 text-center">
-                      <button onClick={() => removeDevice(groupIdx, devIdx)} className="p-1 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100"><Minus size={12}/></button>
-                    </td>
+        {equipmentIPs.map((group, groupIdx) => {
+          const completion = calculateGroupCompletion(group);
+          return (
+            <div key={group.id} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden flex flex-col shadow-sm">
+              <div className="bg-gray-100 dark:bg-gray-800 p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <h3 className="font-bold text-lg text-gray-800 dark:text-white">{group.station}</h3>
+                  <span className={`text-xs px-2 py-0.5 rounded-full border ${completion === 100 ? 'bg-green-100 text-green-700 border-green-200' : 'bg-yellow-100 text-yellow-700 border-yellow-200'}`}>
+                    {completion}%
+                  </span>
+                </div>
+                <button onClick={() => addDeviceToGroup(groupIdx)} className="text-preh-petrol hover:text-preh-grey-blue p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"><Plus size={16}/></button>
+              </div>
+              <table className="w-full text-sm text-left">
+                <thead className="bg-gray-50 dark:bg-gray-900/50 text-gray-600 dark:text-gray-300">
+                  <tr>
+                    <th className="p-2 border-b dark:border-gray-700 w-1/3">{t.equipName}</th>
+                    <th className="p-2 border-b dark:border-gray-700 w-1/3">{t.name}</th>
+                    <th className="p-2 border-b dark:border-gray-700 w-1/3">{t.equipIp}</th>
+                    <th className="p-2 border-b dark:border-gray-700 w-8"></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ))}
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                  {group.devices.map((device, devIdx) => (
+                    <tr key={devIdx} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 group">
+                      <td className="p-0 border-r dark:border-gray-700">
+                        <input value={device.equipment} onChange={(e) => handleIpChange(groupIdx, devIdx, 'equipment', e.target.value)} className="w-full bg-transparent p-2 focus:outline-none dark:text-gray-200" />
+                      </td>
+                      <td className="p-0 border-r dark:border-gray-700">
+                        <input value={device.name} onChange={(e) => handleIpChange(groupIdx, devIdx, 'name', e.target.value)} className="w-full bg-transparent p-2 focus:outline-none dark:text-gray-200" />
+                      </td>
+                      <td className="p-0 border-r dark:border-gray-700">
+                        <input value={device.ip} onChange={(e) => handleIpChange(groupIdx, devIdx, 'ip', e.target.value)} className="w-full bg-transparent p-2 focus:outline-none font-mono text-preh-petrol dark:text-preh-light-blue" />
+                      </td>
+                      <td className="p-0 text-center">
+                        <button onClick={() => removeDevice(groupIdx, devIdx)} className="p-1 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100"><Minus size={12}/></button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
