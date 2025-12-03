@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export enum ViewType {
@@ -11,6 +12,8 @@ export enum ViewType {
   VISUAL_AIDS = 'VISUAL_AIDS',
   DOCUMENTATION = 'DOCUMENTATION',
   EQUIPMENT = 'EQUIPMENT',
+  EQUIPMENT_IPS = 'EQUIPMENT_IPS',
+  EQUIPMENT_PHOTOS = 'EQUIPMENT_PHOTOS',
   PROCESS_FLOW = 'PROCESS_FLOW',
   CAPABILITIES = 'CAPABILITIES',
   PFMEA = 'PFMEA',
@@ -80,13 +83,31 @@ export interface PfmeaItem {
   action: string;
 }
 
+// Detailed Equipment List Item
 export interface EquipmentItem {
   id: string;
-  name: string;
-  model: string;
-  serialNumber: string;
-  maintenanceDue: string;
-  status: 'Active' | 'Maintenance' | 'Offline';
+  station: string;
+  owner: string;
+  eqNumber: string;
+  powerSupply: string;
+  powerKw: string;
+  airSupplyBar: string;
+  airSupplyDiam: string;
+  // For photos view
+  photoFront?: string;
+  photoTag?: string;
+}
+
+// Equipment IP Item (Grouped by Station)
+export interface EquipmentIpGroup {
+  id: string; // Unique ID for the group
+  linkedId?: string; // ID of the parent EquipmentItem
+  station: string;
+  devices: {
+    equipment: string;
+    name: string;
+    ip: string;
+  }[];
 }
 
 export interface Task {

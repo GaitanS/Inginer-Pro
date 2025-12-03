@@ -1,3 +1,4 @@
+
 import { ViewType, Language } from './types';
 
 export const TRANSLATIONS: Record<Language, Record<string, string>> = {
@@ -12,6 +13,8 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     [ViewType.VISUAL_AIDS]: 'Visual Aids',
     [ViewType.DOCUMENTATION]: 'Documentation',
     [ViewType.EQUIPMENT]: 'Equipment List',
+    [ViewType.EQUIPMENT_IPS]: 'Equipment IPs',
+    [ViewType.EQUIPMENT_PHOTOS]: 'Equipment Photos',
     [ViewType.PROCESS_FLOW]: 'Process Flow',
     [ViewType.CAPABILITIES]: 'Capabilities',
     [ViewType.PFMEA]: 'PFMEA',
@@ -78,6 +81,18 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     deleteColumn: 'Delete Column',
     confirmDelete: 'Are you sure?',
     
+    // Equipment
+    owner: 'Owner',
+    eqNumber: 'EQ Number',
+    powerSupply: 'Power Supply',
+    powerKw: 'Power/KW',
+    airSupplyBar: 'Air Supply x bar',
+    airSupplyDiam: 'Air Supply tub diameter [mm]',
+    equipName: 'Equipment',
+    equipIp: 'IP address',
+    photoFront: 'Photo Front',
+    photoTag: 'Photo Tag',
+    
     // Visual Aids
     vaDateCreated: 'Date Created',
     vaCreatedBy: 'Created by',
@@ -109,9 +124,54 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     reqLoad: 'Required Load',
     capAnalysis: 'Analysis: SMT Line 2 is nearing capacity limits (92%). Consider scheduling overtime or offloading to Line 1 if possible.',
     
-    docRepo: 'Document Repository',
+    docRepo: 'Documentation Checklist',
     noDocs: 'No documents uploaded yet. Click to upload or drag files here.',
     uploadBtn: 'Upload File',
+    
+    // Documentation Checklist IATF
+    docProgress: 'Documentation Package Progress',
+    docComplete: 'Complete',
+    docGeneral: '1. General Technical Documentation',
+    docGeneralDesc: 'System manuals, layouts, and specifications.',
+    docUserManual: 'User Manual (Operation, Start/Stop, Changeover)',
+    docLayout: 'Line/Station Layout (2D & 3D)',
+    docTechSpecs: 'Technical Specifications (Cycle time, Energy)',
+
+    docElectrical: '2. Electrical & Software',
+    docElectricalDesc: 'Schematics, code backups, and I/O lists.',
+    docEPlan: 'Electrical Schematics (E-Plan)',
+    docPneumatic: 'Pneumatic & Hydraulic Diagrams',
+    docIOList: 'I/O List (Sensors/Actuators map)',
+    docBackup: 'Software Backups (PLC, HMI, Robot, Vision)',
+    docAlarmList: 'Alarm List & Troubleshooting',
+
+    docMaintenance: '3. Maintenance & Spare Parts',
+    docMaintenanceDesc: 'PM plans and BOM for spare parts.',
+    docPMPlan: 'Preventive Maintenance Plan',
+    docSpareParts: 'Spare Parts List (Critical & Wear parts)',
+    docMechDrawings: 'Mechanical Assembly Drawings',
+
+    docQuality: '4. Quality & Validation',
+    docQualityDesc: 'CE conformity, capability studies, and MSA.',
+    docCE: 'CE Declaration of Conformity',
+    docRisk: 'Risk Assessment (ISO 12100)',
+    docCapability: 'Capability Report (Cmk/Cpk ≥ 1.67)',
+    docMSA: 'MSA Report (Gage R&R)',
+    docParams: 'Process Parameters List',
+
+    docSafety: '5. Safety',
+    docSafetyDesc: 'Safety validation and LOTO procedures.',
+    docSafetyVal: 'Safety Validation Report (Performance Level)',
+    docLOTO: 'LOTO Instructions',
+
+    docTraining: '6. Training',
+    docTrainingDesc: 'Materials and attendance registers.',
+    docTrainingMat: 'Training Materials (Operators/Maintenance)',
+    docTrainingReg: 'Training Register (Signed)',
+
+    iatf2025: 'IATF 16949 (2025 Focus)',
+    docTraceability: 'Traceability Protocol (MES Integration)',
+    docCybersecurity: 'Equipment Cybersecurity Documentation',
     
     systemOnline: 'System Online',
     viewUnderConstruction: 'View Under Construction',
@@ -131,6 +191,8 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     [ViewType.VISUAL_AIDS]: 'Ajutoare Vizuale',
     [ViewType.DOCUMENTATION]: 'Documentație',
     [ViewType.EQUIPMENT]: 'Listă Echipamente',
+    [ViewType.EQUIPMENT_IPS]: 'Echipamente IPs',
+    [ViewType.EQUIPMENT_PHOTOS]: 'Poze Echipamente',
     [ViewType.PROCESS_FLOW]: 'Flux Tehnologic',
     [ViewType.CAPABILITIES]: 'Capabilități',
     [ViewType.PFMEA]: 'PFMEA',
@@ -197,6 +259,18 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     deleteColumn: 'Șterge Coloană',
     confirmDelete: 'Sigur dorești să ștergi?',
 
+    // Equipment
+    owner: 'Proprietar',
+    eqNumber: 'Număr EQ',
+    powerSupply: 'Sursă Alimentare',
+    powerKw: 'Putere/KW',
+    airSupplyBar: 'Alimentare Aer x bar',
+    airSupplyDiam: 'Diametru tub aer [mm]',
+    equipName: 'Echipament',
+    equipIp: 'Adresă IP',
+    photoFront: 'Poză Față',
+    photoTag: 'Poză Etichetă',
+
     // Visual Aids
     vaDateCreated: 'Data Creării',
     vaCreatedBy: 'Creat de',
@@ -228,9 +302,54 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     reqLoad: 'Încărcare Necesară',
     capAnalysis: 'Analiză: Linia SMT 2 se apropie de limită (92%). Luați în considerare ore suplimentare sau mutarea producției pe Linia 1.',
     
-    docRepo: 'Depozit Documente',
+    docRepo: 'Checklist Documentație',
     noDocs: 'Niciun document încărcat. Apăsați pentru a încărca.',
     uploadBtn: 'Încarcă Fișier',
+
+    // Documentation Checklist IATF
+    docProgress: 'Progres Pachet Documentație',
+    docComplete: 'Complet',
+    docGeneral: '1. Documentație Tehnică Generală',
+    docGeneralDesc: 'Manuale, layout-uri și specificații.',
+    docUserManual: 'Manual de Operare (Pornire/Oprire, Changeover)',
+    docLayout: 'Layout Linie/Stație (2D și 3D)',
+    docTechSpecs: 'Specificații Tehnice (Ciclu timp, Energie)',
+
+    docElectrical: '2. Documentație Electrică și Software',
+    docElectricalDesc: 'Scheme, backup-uri cod și liste I/O.',
+    docEPlan: 'Scheme Electrice (E-Plan)',
+    docPneumatic: 'Scheme Pneumatice și Hidraulice',
+    docIOList: 'Listă Intrări/Ieșiri (Mapare Senzori)',
+    docBackup: 'Backup Software (PLC, HMI, Robot, Vision)',
+    docAlarmList: 'Listă Erori și Depanare',
+
+    docMaintenance: '3. Mentenanță și Piese de Schimb',
+    docMaintenanceDesc: 'Planuri PM și BOM piese schimb.',
+    docPMPlan: 'Plan Mentenanță Preventivă',
+    docSpareParts: 'Listă Piese de Schimb (Critice și Uzură)',
+    docMechDrawings: 'Desene Mecanice de Ansamblu',
+
+    docQuality: '4. Calitate și Validare',
+    docQualityDesc: 'Conformitate CE, studii capabilitate și MSA.',
+    docCE: 'Certificat de Conformitate CE',
+    docRisk: 'Analiză de Risc (ISO 12100)',
+    docCapability: 'Raport Capabilitate (Cmk/Cpk ≥ 1.67)',
+    docMSA: 'Raport MSA (Gage R&R)',
+    docParams: 'Listă Parametri de Proces',
+
+    docSafety: '5. Siguranță',
+    docSafetyDesc: 'Validare siguranță și proceduri LOTO.',
+    docSafetyVal: 'Raport Validare Siguranță (PL)',
+    docLOTO: 'Instrucțiuni LOTO',
+
+    docTraining: '6. Training',
+    docTrainingDesc: 'Materiale și registre prezență.',
+    docTrainingMat: 'Materiale Training (Operatori/Mentenanță)',
+    docTrainingReg: 'Registru Training (Semnat)',
+
+    iatf2025: 'IATF 16949 (Focus 2025)',
+    docTraceability: 'Protocol Trasabilitate (Integrare MES)',
+    docCybersecurity: 'Documentație Securitate Cibernetică Echipament',
     
     systemOnline: 'Sistem Online',
     viewUnderConstruction: 'Vizualizare în Construcție',

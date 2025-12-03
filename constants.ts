@@ -1,4 +1,5 @@
-import { ViewType, BomItem, PfmeaItem, EquipmentItem, Task, DocHistoryItem } from './types';
+
+import { ViewType, BomItem, PfmeaItem, EquipmentItem, Task, DocHistoryItem, EquipmentIpGroup } from './types';
 
 export const MOCK_BOM: BomItem[] = [
   { 
@@ -7,6 +8,7 @@ export const MOCK_BOM: BomItem[] = [
     partNumber: '13059-036/0000', 
     quantity: 2, 
     description: 'Ax', 
+    visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
       '90122-034/0000': true,
@@ -22,6 +24,7 @@ export const MOCK_BOM: BomItem[] = [
     partNumber: '12620-736/0000', 
     quantity: 2, 
     description: 'Carcasa ax', 
+    visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
       '90122-034/0000': true,
@@ -37,6 +40,7 @@ export const MOCK_BOM: BomItem[] = [
     partNumber: '10013-651/0000', 
     quantity: 2, 
     description: 'Arc', 
+    visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
       '90122-034/0000': true,
@@ -52,6 +56,7 @@ export const MOCK_BOM: BomItem[] = [
     partNumber: '12331-482/0000', 
     quantity: 1, 
     description: 'Bezel scroll stanga mat', 
+    visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
       '90122-034/0000': true,
@@ -67,6 +72,7 @@ export const MOCK_BOM: BomItem[] = [
     partNumber: '12331-483/0000', 
     quantity: 1, 
     description: 'Bezel scroll dreapta mat', 
+    visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
       '90122-034/0000': true,
@@ -82,6 +88,7 @@ export const MOCK_BOM: BomItem[] = [
     partNumber: '13073-141/0000', 
     quantity: 2, 
     description: 'Rotita scroll mat', 
+    visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
       '90122-034/0000': true,
@@ -97,6 +104,7 @@ export const MOCK_BOM: BomItem[] = [
     partNumber: '12620-734/0000', 
     quantity: 1, 
     description: 'Carcasa Stranga', 
+    visualAidBgColor: '#FFFF00',
     variants: {
       '90122-032/0000': true,
       '90122-034/0000': true,
@@ -112,6 +120,7 @@ export const MOCK_BOM: BomItem[] = [
     partNumber: '05055-276/0000', 
     quantity: 2, 
     description: 'Lever', 
+    visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
       '90122-034/0000': true,
@@ -127,6 +136,7 @@ export const MOCK_BOM: BomItem[] = [
     partNumber: '12331-481/0001', 
     quantity: 1, 
     description: 'Back cover right', 
+    visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
       '90122-034/0000': true,
@@ -168,11 +178,71 @@ export const MOCK_PFMEA: PfmeaItem[] = [
   { id: '4', processStep: 'Final Assembly', failureMode: 'Missing Screw', severity: 6, occurrence: 4, detection: 2, rpn: 48, action: 'Implement torque counter' },
 ];
 
-export const MOCK_EQUIPMENT: EquipmentItem[] = [
-  { id: '1', name: 'Pick & Place Machine A', model: 'NXT III', serialNumber: 'SN-99283', maintenanceDue: '2024-06-15', status: 'Active' },
-  { id: '2', name: 'Reflow Oven', model: 'Heller 1809', serialNumber: 'SN-11223', maintenanceDue: '2024-05-20', status: 'Active' },
-  { id: '3', name: 'Wave Solder', model: 'E-Wave 2', serialNumber: 'SN-44511', maintenanceDue: '2024-04-10', status: 'Maintenance' },
-  { id: '4', name: 'ICT Tester', model: 'Teradyne Z1', serialNumber: 'SN-77821', maintenanceDue: '2024-07-01', status: 'Offline' },
+export const MOCK_EQUIPMENT_DATA: EquipmentItem[] = [
+  { id: '1', station: 'OP 10', owner: 'Customer', eqNumber: '1097268', powerSupply: 'AC 220V 50HZ single phase', powerKw: '1', airSupplyBar: 'no', airSupplyDiam: 'no' },
+  { id: '2', station: 'OP 20.1', owner: 'Preh', eqNumber: '1097269', powerSupply: 'AC 220V 50HZ single phase', powerKw: '1', airSupplyBar: 'no', airSupplyDiam: 'no' },
+  { id: '3', station: 'OP 20.2', owner: 'Preh', eqNumber: '1097271', powerSupply: 'AC 220V 50HZ single phase', powerKw: '1', airSupplyBar: 'no', airSupplyDiam: 'no' },
+  { id: '4', station: 'OP 30.1', owner: 'Preh', eqNumber: '1097272', powerSupply: 'AC 220V 50HZ single phase', powerKw: '1', airSupplyBar: 'no', airSupplyDiam: 'no' },
+  { id: '5', station: 'OP 30.2', owner: 'Preh', eqNumber: '1097273', powerSupply: 'AC 220V 50HZ single phase', powerKw: '1', airSupplyBar: 'no', airSupplyDiam: 'no' },
+  { id: '6', station: 'OP 40.1', owner: 'Preh', eqNumber: '1097274', powerSupply: 'AC 220V 50HZ single phase', powerKw: '1', airSupplyBar: 'no', airSupplyDiam: 'no' },
+  { id: '7', station: 'OP 40.2', owner: 'Preh', eqNumber: '1097275', powerSupply: 'AC 220V 50HZ single phase', powerKw: '1', airSupplyBar: 'no', airSupplyDiam: 'no' },
+  { id: '8', station: 'OP 50.1', owner: 'Preh', eqNumber: '1097276', powerSupply: 'AC 220V 50HZ single phase', powerKw: '2', airSupplyBar: '6', airSupplyDiam: '12' },
+  { id: '9', station: 'OP 50.2', owner: 'Preh', eqNumber: '1097277', powerSupply: 'AC 220V 50HZ single phase', powerKw: '2', airSupplyBar: '6', airSupplyDiam: '12' },
+  { id: '10', station: 'OP 60.1', owner: 'Preh', eqNumber: '1097278', powerSupply: 'AC 220V 50HZ single phase', powerKw: '1,5', airSupplyBar: '6', airSupplyDiam: '12' },
+  { id: '11', station: 'OP 60.2', owner: 'Preh', eqNumber: '1097279', powerSupply: 'AC 220V 50HZ single phase', powerKw: '1,5', airSupplyBar: '6', airSupplyDiam: '12' },
+  { id: '12', station: 'EOL 1', owner: 'Customer', eqNumber: '1097283', powerSupply: 'AC 400V 50Hz 3~/N/PE - max. 32A', powerKw: '', airSupplyBar: '6', airSupplyDiam: '12' },
+  { id: '13', station: 'EOL 2', owner: 'Customer', eqNumber: '1097285', powerSupply: 'AC 400V 50Hz 3~/N/PE - max. 32A', powerKw: '', airSupplyBar: '6', airSupplyDiam: '12' },
+];
+
+export const MOCK_EQUIPMENT_IPS: EquipmentIpGroup[] = [
+  {
+    id: 'g1',
+    linkedId: '8', // OP 50.1
+    station: 'OP 50.1',
+    devices: [
+      { equipment: 'PLC 1217C DC/DC/DC', name: 'OP50-1=PLC-KF1', ip: '172.19.123.150' },
+      { equipment: 'WAGO', name: 'OP50-1=PLC-KF2', ip: '172.19.123.151' },
+      { equipment: 'HMI KTP700', name: 'KTP700_OP50-1', ip: '172.19.123.152' },
+      { equipment: 'Vision Sensor', name: 'OP50-1-ST10-CR', ip: '172.19.123.153' },
+    ]
+  },
+  {
+    id: 'g2',
+    linkedId: '9', // OP 50.2
+    station: 'OP 50.2',
+    devices: [
+      { equipment: 'PLC 1217C DC/DC/DC', name: 'OP50-2=PLC-KF1', ip: '172.19.123.50' },
+      { equipment: 'WAGO', name: 'OP50-2=PLC-KF2', ip: '172.19.123.51' },
+      { equipment: 'HMI KTP700', name: 'KTP700_OP50-2', ip: '172.19.123.52' },
+      { equipment: 'Vision Sensor', name: 'OP50-2-ST10-CR', ip: '172.19.123.53' },
+    ]
+  },
+  {
+    id: 'g3',
+    linkedId: '10', // OP 60.1
+    station: 'OP 60.1',
+    devices: [
+      { equipment: 'PLC 1217C DC/DC/DC', name: 'OP60-1=PLC-KF1', ip: '172.19.123.60' },
+      { equipment: 'WAGO', name: 'OP60-1=PLC-KF2', ip: '172.19.123.61' },
+      { equipment: 'HMI KTP700', name: 'KTP700_OP60-1', ip: '172.19.123.62' },
+      { equipment: 'Vision Sensor', name: 'OP60-1-CR-UP', ip: '172.19.123.64' },
+      { equipment: 'Vision Sensor', name: 'OP60-1-OB-UP', ip: '172.19.123.65' },
+      { equipment: 'Vision Sensor', name: 'OP60-1-CR-DOWN', ip: '172.19.123.66' },
+    ]
+  },
+  {
+    id: 'g4',
+    linkedId: '11', // OP 60.2
+    station: 'OP 60.2',
+    devices: [
+      { equipment: 'PLC 1217C DC/DC/DC', name: 'OP60-2=PLC-KF1', ip: '172.19.123.160' },
+      { equipment: 'WAGO', name: 'OP60-2=PLC-KF2', ip: '172.19.123.161' },
+      { equipment: 'HMI KTP700', name: 'KTP700_OP60-2', ip: '172.19.123.162' },
+      { equipment: 'Vision Sensor', name: 'OP60-2-CR-UP', ip: '172.19.123.164' },
+      { equipment: 'Vision Sensor', name: 'OP60-2-OB-UP', ip: '172.19.123.165' },
+      { equipment: 'Vision Sensor', name: 'OP60-2-CR-DOWN', ip: '172.19.123.166' },
+    ]
+  }
 ];
 
 export const PROJECTS = [
