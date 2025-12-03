@@ -140,7 +140,7 @@ const App: React.FC = () => {
           />
         );
       case ViewType.DOCUMENTATION:
-        return <DocumentationView language={language} isDarkMode={isDarkMode} />;
+        return <DocumentationView language={language} isDarkMode={isDarkMode} equipmentItems={equipmentItems} />;
       case ViewType.PFMEA:
         return <PfmeaView language={language} />;
       case ViewType.EQUIPMENT:

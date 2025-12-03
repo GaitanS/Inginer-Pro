@@ -38,6 +38,10 @@ interface VisualAidsViewProps extends ViewProps {
   variantDefinitions: VariantDefinition[];
 }
 
+interface DocumentationViewProps extends ViewProps {
+  equipmentItems: EquipmentItem[];
+}
+
 interface EquipmentPhotosViewProps extends ViewProps {
   equipmentItems: EquipmentItem[];
   setEquipmentItems: React.Dispatch<React.SetStateAction<EquipmentItem[]>>;
@@ -93,9 +97,11 @@ function getContrastColor(hexColor: string) {
 }
 
 // --- 1# Documentation (IATF Checklist) ---
-export const DocumentationView: React.FC<ViewProps> = ({ language }) => {
+export const DocumentationView: React.FC<DocumentationViewProps> = ({ language, equipmentItems }) => {
   const t = TRANSLATIONS[language];
-  const [checklist, setChecklist] = useState<Record<string, boolean>>({});
+  // Stores checklist state as: { "stationId": { "docKey": true, ... } }
+  const [checklistMap, setChecklistMap] = useState<Record<string, Record<string, boolean>>>({});
+  const [selectedStationId, setSelectedStationId] = useState<string>(equipmentItems[0]?.id || 'general');
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     general: true,
     electrical: false,
@@ -154,94 +160,142 @@ export const DocumentationView: React.FC<ViewProps> = ({ language }) => {
 
   // Load from local storage
   useEffect(() => {
-    const saved = localStorage.getItem('inginer_pro_doc_checklist');
+    const saved = localStorage.getItem('inginer_pro_doc_checklist_v2');
     if (saved) {
       try {
-        setChecklist(JSON.parse(saved));
+        setChecklistMap(JSON.parse(saved));
       } catch (e) {
         console.error("Failed to load checklist", e);
       }
     }
   }, []);
 
-  // Save to local storage
-  const toggleItem = (key: string) => {
-    const newState = { ...checklist, [key]: !checklist[key] };
-    setChecklist(newState);
-    localStorage.setItem('inginer_pro_doc_checklist', JSON.stringify(newState));
+  // Sync selected station if items change
+  useEffect(() => {
+    if (equipmentItems.length > 0 && !equipmentItems.find(e => e.id === selectedStationId)) {
+        setSelectedStationId(equipmentItems[0].id);
+    }
+  }, [equipmentItems]);
+
+  const toggleItem = (itemKey: string) => {
+    const stationChecklist = checklistMap[selectedStationId] || {};
+    const newStationChecklist = { ...stationChecklist, [itemKey]: !stationChecklist[itemKey] };
+    const newMap = { ...checklistMap, [selectedStationId]: newStationChecklist };
+    
+    setChecklistMap(newMap);
+    localStorage.setItem('inginer_pro_doc_checklist_v2', JSON.stringify(newMap));
   };
 
   const toggleSection = (id: string) => {
     setExpandedSections(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // Progress Calculation
-  const totalItems = sections.reduce((acc, sec) => acc + sec.items.length, 0);
-  const checkedItems = Object.values(checklist).filter(Boolean).length;
-  const progress = Math.round((checkedItems / totalItems) * 100);
+  const getStationProgress = (stationId: string) => {
+    const stationChecks = checklistMap[stationId] || {};
+    const totalItems = sections.reduce((acc, sec) => acc + sec.items.length, 0);
+    const checkedItems = Object.values(stationChecks).filter(Boolean).length;
+    return Math.round((checkedItems / totalItems) * 100);
+  };
+
+  const currentStationProgress = getStationProgress(selectedStationId);
 
   return (
-    <div className="space-y-6 pb-10">
-      {/* Header Card */}
-      <div className="bg-white dark:bg-preh-dark-surface p-6 rounded-lg border border-gray-200 dark:border-preh-dark-border shadow-sm">
-        <div className="flex justify-between items-end mb-4">
-          <div>
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-              <FolderOpen className="text-preh-petrol" />
-              {t.docRepo}
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">IATF 16949:2016 & 2025 Compliance Tracker</p>
-          </div>
-          <div className="text-right">
-            <span className="text-2xl font-bold text-preh-petrol dark:text-preh-light-blue">{progress}%</span>
-            <span className="text-xs text-gray-500 dark:text-gray-400 block">{t.docComplete}</span>
-          </div>
-        </div>
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-          <div className="bg-preh-petrol dark:bg-preh-light-blue h-2.5 rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
+    <div className="flex h-full gap-6 pb-10">
+      {/* Sidebar - Equipment Tabs */}
+      <div className="w-64 flex-shrink-0 flex flex-col gap-2">
+        <h3 className="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider mb-2">Select Station</h3>
+        <div className="bg-white dark:bg-preh-dark-surface rounded-lg border border-gray-200 dark:border-preh-dark-border shadow-sm overflow-hidden flex flex-col max-h-[calc(100vh-200px)] overflow-y-auto">
+            {equipmentItems.map(equip => {
+                const progress = getStationProgress(equip.id);
+                return (
+                    <button
+                        key={equip.id}
+                        onClick={() => setSelectedStationId(equip.id)}
+                        className={`text-left px-4 py-3 text-sm font-medium border-l-4 transition-all flex justify-between items-center ${
+                            selectedStationId === equip.id 
+                            ? 'bg-blue-50 dark:bg-gray-700/50 border-preh-petrol text-preh-petrol dark:text-white' 
+                            : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                        }`}
+                    >
+                        <span className="truncate">{equip.station}</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${progress === 100 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400'}`}>
+                            {progress}%
+                        </span>
+                    </button>
+                );
+            })}
+            {equipmentItems.length === 0 && (
+                <div className="p-4 text-xs text-gray-400 text-center">No equipment defined. Add items in Equipment List.</div>
+            )}
         </div>
       </div>
 
-      {/* Checklist Sections */}
-      <div className="grid grid-cols-1 gap-4">
-        {sections.map(section => (
-          <div key={section.id} className={`bg-white dark:bg-preh-dark-surface rounded-lg border ${section.id === 'iatf2025' ? 'border-preh-petrol dark:border-preh-light-blue ring-1 ring-preh-petrol dark:ring-preh-light-blue' : 'border-gray-200 dark:border-preh-dark-border'} shadow-sm overflow-hidden transition-all`}>
-            <button 
-              onClick={() => toggleSection(section.id)}
-              className={`w-full p-4 flex items-center justify-between transition-colors ${section.id === 'iatf2025' ? 'bg-preh-petrol/5 dark:bg-preh-petrol/20' : 'hover:bg-gray-50 dark:hover:bg-gray-800'}`}
-            >
-              <div className="flex items-center gap-3">
-                {section.id === 'iatf2025' ? <ShieldCheck className="text-preh-petrol dark:text-preh-light-blue" /> : <FileText size={20} className="text-gray-400 dark:text-gray-500" />}
-                <div className="text-left">
-                  <h3 className="font-bold text-gray-800 dark:text-gray-100">{t[section.title]}</h3>
-                  {section.desc && <p className="text-xs text-gray-500 dark:text-gray-400">{t[section.desc]}</p>}
-                </div>
-              </div>
-              <ChevronDown className={`text-gray-400 transition-transform ${expandedSections[section.id] ? 'rotate-180' : ''}`} />
-            </button>
-            
-            {expandedSections[section.id] && (
-              <div className="p-4 pt-0 border-t border-gray-100 dark:border-gray-700 bg-gray-50/30 dark:bg-black/10">
-                <div className="space-y-3 mt-3">
-                  {section.items.map(itemKey => (
-                    <div 
-                      key={itemKey} 
-                      className="flex items-center gap-3 p-2 rounded hover:bg-white dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
-                      onClick={() => toggleItem(itemKey)}
-                    >
-                      <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${checklist[itemKey] ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-800'}`}>
-                        {checklist[itemKey] && <Check size={14} strokeWidth={3} />}
-                      </div>
-                      <span className={`text-sm ${checklist[itemKey] ? 'text-gray-500 line-through dark:text-gray-500' : 'text-gray-700 dark:text-gray-200'}`}>
-                        {t[itemKey]}
-                      </span>
+      {/* Main Checklist Area */}
+      <div className="flex-1 space-y-6 overflow-y-auto pr-2">
+        {/* Header Card */}
+        <div className="bg-white dark:bg-preh-dark-surface p-6 rounded-lg border border-gray-200 dark:border-preh-dark-border shadow-sm">
+            <div className="flex justify-between items-end mb-4">
+            <div>
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                <FolderOpen className="text-preh-petrol" />
+                {equipmentItems.find(e => e.id === selectedStationId)?.station || "General"}
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">IATF 16949:2016 & 2025 Compliance Tracker</p>
+            </div>
+            <div className="text-right">
+                <span className="text-2xl font-bold text-preh-petrol dark:text-preh-light-blue">{currentStationProgress}%</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 block">{t.docComplete}</span>
+            </div>
+            </div>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+            <div className="bg-preh-petrol dark:bg-preh-light-blue h-2.5 rounded-full transition-all duration-500" style={{ width: `${currentStationProgress}%` }}></div>
+            </div>
+        </div>
+
+        {/* Checklist Sections */}
+        <div className="grid grid-cols-1 gap-4">
+            {sections.map(section => (
+            <div key={section.id} className={`bg-white dark:bg-preh-dark-surface rounded-lg border ${section.id === 'iatf2025' ? 'border-preh-petrol dark:border-preh-light-blue ring-1 ring-preh-petrol dark:ring-preh-light-blue' : 'border-gray-200 dark:border-preh-dark-border'} shadow-sm overflow-hidden transition-all`}>
+                <button 
+                onClick={() => toggleSection(section.id)}
+                className={`w-full p-4 flex items-center justify-between transition-colors ${section.id === 'iatf2025' ? 'bg-preh-petrol/5 dark:bg-preh-petrol/20' : 'hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+                >
+                <div className="flex items-center gap-3">
+                    {section.id === 'iatf2025' ? <ShieldCheck className="text-preh-petrol dark:text-preh-light-blue" /> : <FileText size={20} className="text-gray-400 dark:text-gray-500" />}
+                    <div className="text-left">
+                    <h3 className="font-bold text-gray-800 dark:text-gray-100">{t[section.title]}</h3>
+                    {section.desc && <p className="text-xs text-gray-500 dark:text-gray-400">{t[section.desc]}</p>}
                     </div>
-                  ))}
                 </div>
-              </div>
-            )}
-          </div>
-        ))}
+                <ChevronDown className={`text-gray-400 transition-transform ${expandedSections[section.id] ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {expandedSections[section.id] && (
+                <div className="p-4 pt-0 border-t border-gray-100 dark:border-gray-700 bg-gray-50/30 dark:bg-black/10">
+                    <div className="space-y-3 mt-3">
+                    {section.items.map(itemKey => {
+                        const isChecked = checklistMap[selectedStationId]?.[itemKey] || false;
+                        return (
+                            <div 
+                            key={itemKey} 
+                            className="flex items-center gap-3 p-2 rounded hover:bg-white dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
+                            onClick={() => toggleItem(itemKey)}
+                            >
+                            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isChecked ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-800'}`}>
+                                {isChecked && <Check size={14} strokeWidth={3} />}
+                            </div>
+                            <span className={`text-sm ${isChecked ? 'text-gray-500 line-through dark:text-gray-500' : 'text-gray-700 dark:text-gray-200'}`}>
+                                {t[itemKey]}
+                            </span>
+                            </div>
+                        );
+                    })}
+                    </div>
+                </div>
+                )}
+            </div>
+            ))}
+        </div>
       </div>
     </div>
   );
