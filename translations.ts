@@ -13,6 +13,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     [ViewType.VISUAL_AIDS]: 'Visual Aids',
     [ViewType.DOCUMENTATION]: 'Documentation',
     [ViewType.EQUIPMENT]: 'Equipment List',
+    [ViewType.VALIDATION_PROTOCOL]: 'Validation Protocol',
     [ViewType.EQUIPMENT_IPS]: 'Equipment IPs',
     [ViewType.EQUIPMENT_PHOTOS]: 'Equipment Photos',
     [ViewType.PROCESS_FLOW]: 'Process Flow',
@@ -181,7 +182,10 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
 
     // AI Prompts parts
     aiRole: 'You are an industrial engineering assistant.',
-    aiPromptLang: 'Answer in English.'
+    aiPromptLang: 'Answer in English.',
+
+    docValidation: '7. DEVICE VALIDATION PROTOCOL',
+    docValidationDesc: 'Device Approval Checklist (Safety, Hardware, Process).'
   },
   ro: {
     [ViewType.DASHBOARD]: 'Panou de Control',
@@ -194,6 +198,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     [ViewType.VISUAL_AIDS]: 'Ajutoare Vizuale',
     [ViewType.DOCUMENTATION]: 'Documentație',
     [ViewType.EQUIPMENT]: 'Listă Echipamente',
+    [ViewType.VALIDATION_PROTOCOL]: 'Protocol Validare',
     [ViewType.EQUIPMENT_IPS]: 'Echipamente IPs',
     [ViewType.EQUIPMENT_PHOTOS]: 'Poze Echipamente',
     [ViewType.PROCESS_FLOW]: 'Flux Tehnologic',
@@ -362,6 +367,9 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
 
     // AI Prompts parts
     aiRole: 'Ești un asistent inginer industrial. Răspunde în limba Română.',
-    aiPromptLang: 'Answer in Romanian.'
+    aiPromptLang: 'Answer in Romanian.',
+
+    docValidation: '7. PROTOCOL DE VALIDARE ECHIPAMENT',
+    docValidationDesc: 'Listă Verificare Aprobare Echipament (Siguranță, Hardware, Proces).'
   }
 };

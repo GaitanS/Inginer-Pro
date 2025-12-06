@@ -279,3 +279,148 @@ export const DROPDOWN_OPTIONS = {
   airSupplyBar: ['no', '6', '8'],
   airSupplyDiam: ['no', '12', '16']
 };
+
+export const VALIDATION_CHECKLIST_DATA = [
+  {
+    id: 'safety',
+    title: '1. SAFETY & EHS (Siguranță și Mediu)',
+    items: [
+      {
+        refIatf: '7.1.3.1 (Siguranță)',
+        refVda: 'P6.4.1 (Mediu lucru)',
+        test: 'Pornește mașina în mod automat. Activează un element de siguranță (apasă E-Stop sau întrerupe cortina).',
+        expected: 'Oprire Instantanee. Mașina nu trebuie să mai facă nicio mișcare mecanică. Resetarea necesită acțiune voită (buton albastru).',
+        example: 'Dacă bagi mâna prin cortină, cilindrul de presare se oprește imediat.',
+      },
+      {
+        refIatf: 'P6.4.1 (Conformitate)',
+        refVda: 'P6.4.1',
+        test: 'Caută plăcuța metalică de identificare pe șasiu. Verifică dacă are marcajul "CE".',
+        expected: 'Marcaj Prezent. Plăcuța conține: Producător, An, Serie, Tensiune, Presiune, Marcaj CE.',
+        example: 'Plăcuța e nituită vizibil, nu e un abțibild care cade.',
+      },
+      {
+        refIatf: '7.1.3.1 (Ergonomie)',
+        refVda: 'P6.4.1 (Ergonomie)',
+        test: 'Treci cu mâna (fără mănușă) pe la colțurile mașinii, profilele de aluminiu, sub masă. Verifică zgomotul în sarcină.',
+        expected: 'Fără riscuri. Nu există muchii tăioase, bavuri metalice sau colțuri ascuțite.',
+        example: 'Profilele de aluminiu au capace de plastic. Cablurile nu atârnă.',
+      }
+    ]
+  },
+  {
+    id: 'hardware',
+    title: '2. CONSTRUCȚIE MECANICĂ & HARDWARE',
+    items: [
+      {
+        refIatf: '8.5.4.1 (Protecție)',
+        refVda: 'P6.6.2 (Manipulare)',
+        test: 'Ia o piesă HMI vopsită. Așaz-o în cuib (nest) și scoate-o de 10 ori. Verifică piesa la lumină.',
+        expected: 'Zero Zgârieturi. Suprafețele de contact trebuie să fie din material moale (Rășină, POM, Cauciuc).',
+        example: 'Cuibul e curat, nu are șuruburi metalice care ating fața piesei.',
+      },
+      {
+        refIatf: '7.1.4 (Mediu)',
+        refVda: 'P6.4.3 (ESD)',
+        test: 'Măsoară cu aparatul ESD continuitatea între părțile metalice și pământare. Verifică materialele plastice.',
+        expected: 'Disipativ / Conductiv. Toate metalele sunt legate la pământ. Plasticul de contact e negru (ESD Safe).',
+        example: 'Dacă atingi cu sonda șurubelnița electrică și masa, aparatul piuie.',
+      },
+      {
+        refIatf: 'P6.4.1 (Ordinea)',
+        refVda: 'P6.4.1',
+        test: 'Deschide dulapul electric și uită-te la fire. Verifică traseul cablurilor pe mașină.',
+        expected: 'Etichetare & Ordine. Toate firele au etichete. Cablurile mobile sunt în lanț port-cablu.',
+        example: 'Pe fir scrie "S12" și pe senzor scrie "S12". Nu sunt fire lipite cu bandă.',
+      },
+      {
+        refIatf: '10.2.4 (Poka-Yoke)',
+        refVda: 'P6.4.2 (Design)',
+        test: 'Încearcă să așezi piesa în cuib invers (rotită cu 180 grade sau cu fața în jos).',
+        expected: 'Imposibil mecanic. Pinii de ghidare nu permit așezarea greșită a piesei.',
+        example: 'Piesa intră doar într-o singură poziție. Nu poți forța asamblarea greșită.',
+      }
+    ]
+  },
+  {
+    id: 'capability',
+    title: '3. CAPABILITATE & PROCES',
+    items: [
+      {
+        refIatf: '7.1.5.1.1 (Statistica)',
+        refVda: 'P6.4.1 (Cmk)',
+        test: 'Rulează 50 de piese consecutive fără eroare. Cere raportul Cmk pentru caracteristica critică.',
+        expected: 'Cmk >= 1.67. Procesul este stabil și centrat. Histogramă îngustă.',
+        example: 'Dacă ținta e 1.2 Nm, toate valorile sunt între 1.18 și 1.22.',
+      },
+      {
+        refIatf: '7.1.5.1.1 (MSA)',
+        refVda: 'P6.4.1 (Precizie)',
+        test: 'Ia piesa "Master" (Etalon). Măsoar-o de 10 ori la rând pe aceeași mașină.',
+        expected: 'Variație < 10%. Mașina arată aproape aceeași valoare de fiecare dată.',
+        example: 'Test Light Density: 500, 501, 499, 500 lux.',
+      },
+      {
+        refIatf: '8.5.1.1 (Parametri)',
+        refVda: 'P6.2.3 (Setări)',
+        test: 'Compară foaia de parametri aprobată cu ce e setat în ecranul mașinii.',
+        expected: 'Identic. Nu există abateri neaprobate.',
+        example: 'Timp lipire: Foaie = 3.5s vs Mașină = 3.5s.',
+      }
+    ]
+  },
+  {
+    id: 'logic',
+    title: '4. LOGICA DE REBUT & ERORI',
+    items: [
+      {
+        refIatf: '10.2.4 (Detecție)',
+        refVda: 'P6.4.3 (Eroare)',
+        test: 'Introdu o piesă defectă (ex: fără un clips). Dă Start.',
+        expected: 'STOP / NOK. Mașina detectează eroarea înainte de a finaliza procesul.',
+        example: 'Senzorul de prezență vede că lipsește clipsul.',
+      },
+      {
+        refIatf: '10.2.3 (Interlock)',
+        refVda: 'P6.3.2 (Blocare)',
+        test: 'După ce mașina a dat NOK... Încearcă să bagi o piesă nouă imediat.',
+        expected: 'Start Blocat. Nu poți porni ciclul nou până nu "cureți" eroarea.',
+        example: 'Butonul de Start e inactiv. HMI-ul afișează "Acknowledge Scrap".',
+      },
+      {
+        refIatf: '8.7.1.4 (Confirmare)',
+        refVda: 'P6.3.2 (Segregare)',
+        test: 'Când mașina cere "Aruncă piesa", bagă mâna în cutia de piese BUNE. Vezi dacă eroarea dispare.',
+        expected: 'Nu se resetează. Eroarea dispare DOAR dacă senzorul vede mâna în cutia ROȘIE.',
+        example: 'Senzorul de pe cutia roșie trebuie să confirme fizic aruncarea.',
+      },
+      {
+        refIatf: '8.5.1.1 (Acces)',
+        refVda: 'P6.2.3 (User)',
+        test: 'Loghează-te ca Operator. Încearcă să dezactivezi senzorul de la cutia de rebut.',
+        expected: 'Acces Interzis. Operatorul nu poate modifica logica de control.',
+        example: 'Butonul de "Settings" este gri sau cere parolă.',
+      }
+    ]
+  },
+  {
+    id: 'docs',
+    title: '5. DOCUMENTAȚIE & MENTENANȚĂ',
+    items: [
+      {
+        refIatf: '8.5.1.5 (Piese)',
+        refVda: 'P6.4.2 (Spare Parts)',
+        test: 'Cere cutia cu "Start-up Kit". Verifică dacă ai piesele critice.',
+        expected: 'Fizic prezente. Nu semnezi recepția pe promisiuni.',
+        example: 'Ai în mână senzorul optic de rezervă și bitul de șurubelniță.',
+      },
+      {
+        refIatf: '7.5.3.2 (Scheme)',
+        refVda: 'P6.4.2 (Manuale)',
+        test: 'Verifică dacă ai manualul de utilizare și schema electrică.',
+        expected: 'Disponibil. Format digital (PDF) + O copie fizică la mașină.',
+        example: 'Schema electrică corespunde cu tabloul.',
+      }
+    ]
+  }
+];

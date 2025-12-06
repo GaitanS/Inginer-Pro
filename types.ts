@@ -12,6 +12,7 @@ export enum ViewType {
   VISUAL_AIDS = 'VISUAL_AIDS',
   DOCUMENTATION = 'DOCUMENTATION',
   EQUIPMENT = 'EQUIPMENT',
+  VALIDATION_PROTOCOL = 'VALIDATION_PROTOCOL',
   EQUIPMENT_IPS = 'EQUIPMENT_IPS',
   EQUIPMENT_PHOTOS = 'EQUIPMENT_PHOTOS',
   PROCESS_FLOW = 'PROCESS_FLOW',
@@ -43,7 +44,7 @@ export interface BomItem {
   visualAidBgColor?: string; // Hex color for Visual Aid background
   // Dynamic variant applicability (e.g., "Audio/FAS...")
   variants: {
-    [variantName: string]: boolean; 
+    [variantName: string]: boolean;
   };
 }
 

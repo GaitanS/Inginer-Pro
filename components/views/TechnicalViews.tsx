@@ -2,9 +2,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MOCK_EQUIPMENT_DATA, MOCK_EQUIPMENT_IPS, MOCK_PFMEA, DEFAULT_COLORS } from '../../constants';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Language, BomItem, DocHistoryItem, VisualAidMetadata, VariantDefinition, EquipmentItem, EquipmentIpGroup } from '../../types';
+import { Language, BomItem, DocHistoryItem, VisualAidMetadata, VariantDefinition, EquipmentItem, EquipmentIpGroup, ViewType } from '../../types';
 import { TRANSLATIONS } from '../../translations';
-import { Download, Upload, FileSpreadsheet, Image as ImageIcon, Search, Plus, Trash2, Minus, FileText, FileCheck, CheckSquare, Square, Check, X as XIcon, ShieldCheck, Network, FolderOpen, ChevronDown, ChevronRight, CheckCircle2, FileType, Circle } from 'lucide-react';
+import { Download, Upload, FileSpreadsheet, Image as ImageIcon, Search, Plus, Trash2, Minus, FileText, FileCheck, CheckSquare, Square, Check, X as XIcon, ShieldCheck, Network, FolderOpen, ChevronDown, ChevronRight, CheckCircle2, FileType, Circle, AlertTriangle } from 'lucide-react';
 
 declare global {
   interface Window {
@@ -97,6 +97,259 @@ function getContrastColor(hexColor: string) {
 }
 
 // --- 1# Documentation (IATF Checklist) ---
+import { VALIDATION_CHECKLIST_DATA } from '../../constants';
+
+interface DeviceValidationFormProps {
+  language: Language;
+  stationId: string;
+  onProgressUpdate?: () => void;
+}
+
+const DeviceValidationForm: React.FC<DeviceValidationFormProps> = ({ language, stationId, onProgressUpdate }) => {
+  const t = TRANSLATIONS[language];
+  // Local state to store results: { "itemId": "OK" | "NOK" | null }
+  const [results, setResults] = useState<Record<string, 'OK' | 'NOK' | null>>({});
+
+  // Unique key for local storage per station
+  const storageKey = `validation_results_${stationId}`;
+
+  useEffect(() => {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      try {
+        setResults(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to load validation results", e);
+      }
+    } else {
+      setResults({});
+    }
+  }, [stationId]);
+
+  const handleResult = (itemId: string, status: 'OK' | 'NOK') => {
+    const newResults = { ...results, [itemId]: status };
+    setResults(newResults);
+    localStorage.setItem(storageKey, JSON.stringify(newResults));
+    if (onProgressUpdate) onProgressUpdate();
+  };
+
+  const getStatusColor = (status: 'OK' | 'NOK' | null) => {
+    if (status === 'OK') return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800';
+    if (status === 'NOK') return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800';
+    return 'bg-gray-50 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700';
+  };
+
+  const totalItems = VALIDATION_CHECKLIST_DATA.reduce((acc, cat) => acc + cat.items.length, 0);
+  const passedItems = Object.values(results).filter(r => r === 'OK').length;
+  const progress = Math.round((passedItems / totalItems) * 100);
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-300">
+      {/* Summary Header */}
+      <div className="bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-preh-dark-surface p-6 rounded-lg border border-gray-200 dark:border-gray-700 flex justify-between items-center shadow-sm">
+        <div>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Status Validare</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {passedItems} / {totalItems} Puncte Validate (OK)
+          </p>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <span className={`text-2xl font-bold ${progress === 100 ? 'text-green-500' : progress >= 50 ? 'text-orange-500' : 'text-red-500'}`}>{progress}%</span>
+            <span className="text-xs text-gray-500 block">Progres</span>
+          </div>
+          {/* Simple Circular Progress or Bar could go here */}
+          <div className="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div
+              className={`h-full transition-all duration-500 ${progress === 100 ? 'bg-green-500' : progress >= 50 ? 'bg-orange-500' : 'bg-red-500'}`}
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      {VALIDATION_CHECKLIST_DATA.map((category) => (
+        <div key={category.id} className="space-y-4">
+          <h4 className="font-bold text-lg text-preh-petrol dark:text-preh-light-blue border-b border-gray-200 dark:border-gray-700 pb-2">
+            {category.title}
+          </h4>
+
+          <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 uppercase text-xs font-semibold">
+                <tr>
+                  <th className="px-4 py-3 w-32 border-r border-gray-200 dark:border-gray-700">Ref IATF / VDA</th>
+                  <th className="px-4 py-3 w-1/4 border-r border-gray-200 dark:border-gray-700">Test Fizic (Ce facem?)</th>
+                  <th className="px-4 py-3 w-1/4 border-r border-gray-200 dark:border-gray-700">Rezultat Așteptat</th>
+                  <th className="px-4 py-3 w-1/4 border-r border-gray-200 dark:border-gray-700">Exemplu Concret</th>
+                  <th className="px-4 py-3 w-32 text-center">Rezultat</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-preh-dark-surface">
+                {category.items.map((item, idx) => {
+                  const itemId = `${category.id}_${idx}`;
+                  const status = results[itemId];
+
+                  return (
+                    <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                      <td className="px-4 py-3 align-top border-r border-gray-200 dark:border-gray-700 font-mono text-xs text-gray-500 dark:text-gray-400">
+                        <div className="mb-1">IATF: <span className="text-gray-900 dark:text-gray-200 font-bold">{item.refIatf}</span></div>
+                        <div>VDA: {item.refVda}</div>
+                      </td>
+                      <td className="px-4 py-3 align-top border-r border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 font-medium">
+                        {item.test}
+                      </td>
+                      <td className="px-4 py-3 align-top border-r border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300">
+                        {item.expected}
+                      </td>
+                      <td className="px-4 py-3 align-top border-r border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 italic">
+                        "{item.example}"
+                      </td>
+                      <td className="px-4 py-3 align-top">
+                        <div className="flex flex-col gap-2 items-center">
+                          <div className="flex gap-1 w-full">
+                            <button
+                              onClick={() => handleResult(itemId, 'OK')}
+                              className={`flex-1 py-1 px-2 rounded text-xs font-bold transition-all border ${status === 'OK'
+                                ? 'bg-green-600 border-green-600 text-white shadow-sm scale-105'
+                                : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-400 hover:border-green-500 hover:text-green-500'
+                                }`}
+                            >
+                              OK
+                            </button>
+                            <button
+                              onClick={() => handleResult(itemId, 'NOK')}
+                              className={`flex-1 py-1 px-2 rounded text-xs font-bold transition-all border ${status === 'NOK'
+                                ? 'bg-red-600 border-red-600 text-white shadow-sm scale-105'
+                                : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-400 hover:border-red-500 hover:text-red-500'
+                                }`}
+                            >
+                              NOK
+                            </button>
+                          </div>
+                          {status && (
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${status === 'OK' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                              }`}>
+                              {status === 'OK' ? 'Validat' : 'Respins'}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+
+      <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800 flex items-start gap-3">
+        <div className="bg-yellow-100 dark:bg-yellow-900/50 p-2 rounded-full text-yellow-600 dark:text-yellow-400">
+          <AlertTriangle size={20} />
+        </div>
+        <div>
+          <h5 className="font-bold text-yellow-800 dark:text-yellow-200 text-sm">Notă Importantă</h5>
+          <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+            Toate punctele "NOK" trebuie tratate ca puncte deschise în lista de acțiuni (LOP). Echipamentul nu poate fi validat final până când toate punctele critice de siguranță nu sunt "OK".
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const ValidationView: React.FC<DocumentationViewProps> = ({ language, equipmentItems }) => {
+  const t = TRANSLATIONS[language];
+  const [selectedStationId, setSelectedStationId] = useState<string>(equipmentItems[0]?.id || 'general');
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleProgressUpdate = () => {
+    setRefreshKey(prev => prev + 1);
+  };
+
+  const getStationValidationProgress = (stationId: string) => {
+    try {
+      const saved = localStorage.getItem(`validation_results_${stationId}`);
+      if (!saved) return 0;
+      const results = JSON.parse(saved);
+      const passedItems = Object.values(results).filter(r => r === 'OK').length;
+      const totalItems = VALIDATION_CHECKLIST_DATA.reduce((acc, cat) => acc + cat.items.length, 0);
+      return Math.round((passedItems / totalItems) * 100);
+    } catch {
+      return 0;
+    }
+  };
+
+  const getProgressColorClass = (progress: number) => {
+    if (progress === 100) return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800';
+    if (progress >= 50) return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 border-orange-200 dark:border-orange-800';
+    return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800';
+  };
+
+  // Sync selected station if items change
+  useEffect(() => {
+    if (equipmentItems.length > 0 && !equipmentItems.find(e => e.id === selectedStationId)) {
+      setSelectedStationId(equipmentItems[0].id);
+    }
+  }, [equipmentItems]);
+
+  return (
+    <div className="flex h-full gap-6 pb-10">
+      {/* Sidebar - Equipment Tabs */}
+      <div className="w-64 flex-shrink-0 flex flex-col gap-2">
+        <h3 className="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider mb-2">Select Station</h3>
+        <div className="bg-white dark:bg-preh-dark-surface rounded-lg border border-gray-200 dark:border-preh-dark-border shadow-sm overflow-hidden flex flex-col max-h-[calc(100vh-200px)] overflow-y-auto">
+          {equipmentItems.map(equip => {
+            const progress = getStationValidationProgress(equip.id);
+            const colorClass = getProgressColorClass(progress);
+
+            return (
+              <button
+                key={equip.id}
+                onClick={() => setSelectedStationId(equip.id)}
+                className={`text-left px-4 py-3 text-sm font-medium border-l-4 transition-all flex justify-between items-center ${selectedStationId === equip.id
+                  ? 'bg-blue-50 dark:bg-gray-700/50 border-preh-petrol text-preh-petrol dark:text-white'
+                  : 'border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                  }`}
+              >
+                <span className="truncate">{equip.station}</span>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full border ${colorClass} font-bold min-w-[36px] text-center`}>
+                  {progress}%
+                </span>
+              </button>
+            );
+          })}
+          {equipmentItems.length === 0 && (
+            <div className="p-4 text-xs text-gray-400 text-center">No equipment defined. Add items in Equipment List.</div>
+          )}
+        </div>
+      </div>
+
+      {/* Main Validation Area */}
+      <div className="flex-1 space-y-6 overflow-y-auto pr-2">
+        {/* Title */}
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+            <ShieldCheck className="text-preh-petrol dark:text-preh-light-blue" size={28} />
+            {t[ViewType.VALIDATION_PROTOCOL]}
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            Validare Echipament: <span className="font-bold text-gray-800 dark:text-gray-200">{equipmentItems.find(e => e.id === selectedStationId)?.station}</span>
+          </p>
+        </div>
+
+        <DeviceValidationForm
+          key={selectedStationId}
+          language={language}
+          stationId={selectedStationId}
+          onProgressUpdate={handleProgressUpdate}
+        />
+      </div>
+    </div>
+  );
+};
+
 export const DocumentationView: React.FC<DocumentationViewProps> = ({ language, equipmentItems }) => {
   const t = TRANSLATIONS[language];
   // Stores checklist state as: { "stationId": { "docKey": true, ... } }
@@ -109,7 +362,7 @@ export const DocumentationView: React.FC<DocumentationViewProps> = ({ language, 
     quality: false,
     safety: false,
     training: false,
-    iatf2025: true
+    iatf2025: false
   });
 
   // Checklist Structure mapped to Translation Keys

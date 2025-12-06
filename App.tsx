@@ -4,7 +4,7 @@ import { Sidebar } from './components/Sidebar';
 import { RightPanel } from './components/RightPanel';
 import { DashboardView } from './components/views/DashboardView';
 import { TaskPrioritizationView } from './components/views/TaskPrioritizationView';
-import { BomView, VisualAidsView, DocumentationView, PfmeaView, EquipmentMainView, EquipmentIPsView, EquipmentPhotosView, CapacityView, GenericDocView } from './components/views/TechnicalViews';
+import { BomView, VisualAidsView, DocumentationView, ValidationView, PfmeaView, EquipmentMainView, EquipmentIPsView, EquipmentPhotosView, CapacityView, GenericDocView } from './components/views/TechnicalViews';
 import { ViewType, Language, Task, BomItem, DocHistoryItem, VariantDefinition, EquipmentItem, EquipmentIpGroup } from './types';
 import { TRANSLATIONS } from './translations';
 import { PROJECTS, INITIAL_TASKS, MOCK_BOM, MOCK_HISTORY, DEFAULT_COLORS, MOCK_EQUIPMENT_DATA, MOCK_EQUIPMENT_IPS } from './constants';
@@ -24,7 +24,7 @@ const App: React.FC = () => {
     }));
   });
   const [historyItems, setHistoryItems] = useState<DocHistoryItem[]>(MOCK_HISTORY);
-  
+
   const [variantDefinitions, setVariantDefinitions] = useState<VariantDefinition[]>(() => {
     const uniqueKeys = Array.from(new Set(MOCK_BOM.flatMap(item => Object.keys(item.variants))));
     return uniqueKeys.map((key, index) => ({
@@ -117,8 +117,8 @@ const App: React.FC = () => {
         return <TaskPrioritizationView tasks={tasks} onUpdateTasks={setTasks} language={language} />;
       case ViewType.BOM:
         return (
-          <BomView 
-            language={language} 
+          <BomView
+            language={language}
             isDarkMode={isDarkMode}
             bomItems={bomItems}
             setBomItems={setBomItems}
@@ -130,10 +130,10 @@ const App: React.FC = () => {
         );
       case ViewType.VISUAL_AIDS:
         return (
-          <VisualAidsView 
-            language={language} 
-            isDarkMode={isDarkMode} 
-            currentProject={currentProject} 
+          <VisualAidsView
+            language={language}
+            isDarkMode={isDarkMode}
+            currentProject={currentProject}
             bomItems={bomItems}
             setBomItems={setBomItems}
             variantDefinitions={variantDefinitions}
@@ -141,21 +141,23 @@ const App: React.FC = () => {
         );
       case ViewType.DOCUMENTATION:
         return <DocumentationView language={language} isDarkMode={isDarkMode} equipmentItems={equipmentItems} />;
+      case ViewType.VALIDATION_PROTOCOL:
+        return <ValidationView language={language} isDarkMode={isDarkMode} equipmentItems={equipmentItems} />;
       case ViewType.PFMEA:
         return <PfmeaView language={language} />;
       case ViewType.EQUIPMENT:
         return (
-          <EquipmentMainView 
-            language={language} 
-            equipmentItems={equipmentItems} 
+          <EquipmentMainView
+            language={language}
+            equipmentItems={equipmentItems}
             setEquipmentItems={setEquipmentItems}
             onAddRow={handleAddEquipment}
           />
         );
       case ViewType.EQUIPMENT_IPS:
         return (
-          <EquipmentIPsView 
-            language={language} 
+          <EquipmentIPsView
+            language={language}
             equipmentIPs={equipmentIPs}
             setEquipmentIPs={setEquipmentIPs}
           />
@@ -190,9 +192,9 @@ const App: React.FC = () => {
   return (
     <div className={`${isDarkMode ? 'dark' : ''}`}>
       <div className="flex h-screen bg-white dark:bg-preh-dark-bg overflow-hidden font-sans text-gray-800 dark:text-gray-100 transition-colors duration-200">
-        <Sidebar 
-          activeView={activeView} 
-          onNavigate={setActiveView} 
+        <Sidebar
+          activeView={activeView}
+          onNavigate={setActiveView}
           currentUser="Alex Engineer"
           language={language}
           onToggleLanguage={toggleLanguage}
@@ -208,8 +210,8 @@ const App: React.FC = () => {
             </h1>
             <div className="flex items-center space-x-4">
               <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 px-3 py-1 rounded-full border border-gray-100 dark:border-gray-700">
-                  <span className="h-2 w-2 bg-preh-pastel-green rounded-full animate-pulse"></span>
-                  <span className="text-xs text-gray-500 dark:text-gray-300 font-medium">{t.systemOnline}</span>
+                <span className="h-2 w-2 bg-preh-pastel-green rounded-full animate-pulse"></span>
+                <span className="text-xs text-gray-500 dark:text-gray-300 font-medium">{t.systemOnline}</span>
               </div>
             </div>
           </header>
