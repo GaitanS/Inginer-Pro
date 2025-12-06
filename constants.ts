@@ -2,12 +2,12 @@
 import { ViewType, BomItem, PfmeaItem, EquipmentItem, Task, DocHistoryItem, EquipmentIpGroup } from './types';
 
 export const MOCK_BOM: BomItem[] = [
-  { 
-    id: '1', 
-    station: 'OP10', 
-    partNumber: '13059-036/0000', 
-    quantity: 2, 
-    description: 'Ax', 
+  {
+    id: '1',
+    station: 'OP10',
+    partNumber: '13059-036/0000',
+    quantity: 2,
+    description: 'Ax',
     visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
@@ -18,12 +18,12 @@ export const MOCK_BOM: BomItem[] = [
       '90122-036/0000': true
     }
   },
-  { 
-    id: '2', 
-    station: 'OP10', 
-    partNumber: '12620-736/0000', 
-    quantity: 2, 
-    description: 'Carcasa ax', 
+  {
+    id: '2',
+    station: 'OP10',
+    partNumber: '12620-736/0000',
+    quantity: 2,
+    description: 'Carcasa ax',
     visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
@@ -34,12 +34,12 @@ export const MOCK_BOM: BomItem[] = [
       '90122-036/0000': true
     }
   },
-  { 
-    id: '3', 
-    station: 'OP20', 
-    partNumber: '10013-651/0000', 
-    quantity: 2, 
-    description: 'Arc', 
+  {
+    id: '3',
+    station: 'OP20',
+    partNumber: '10013-651/0000',
+    quantity: 2,
+    description: 'Arc',
     visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
@@ -50,12 +50,12 @@ export const MOCK_BOM: BomItem[] = [
       '90122-036/0000': true
     }
   },
-  { 
-    id: '4', 
-    station: 'OP30', 
-    partNumber: '12331-482/0000', 
-    quantity: 1, 
-    description: 'Bezel scroll stanga mat', 
+  {
+    id: '4',
+    station: 'OP30',
+    partNumber: '12331-482/0000',
+    quantity: 1,
+    description: 'Bezel scroll stanga mat',
     visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
@@ -66,12 +66,12 @@ export const MOCK_BOM: BomItem[] = [
       '90122-036/0000': true
     }
   },
-  { 
-    id: '5', 
-    station: 'OP30', 
-    partNumber: '12331-483/0000', 
-    quantity: 1, 
-    description: 'Bezel scroll dreapta mat', 
+  {
+    id: '5',
+    station: 'OP30',
+    partNumber: '12331-483/0000',
+    quantity: 1,
+    description: 'Bezel scroll dreapta mat',
     visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
@@ -82,12 +82,12 @@ export const MOCK_BOM: BomItem[] = [
       '90122-036/0000': true
     }
   },
-  { 
-    id: '6', 
-    station: 'OP40', 
-    partNumber: '13073-141/0000', 
-    quantity: 2, 
-    description: 'Rotita scroll mat', 
+  {
+    id: '6',
+    station: 'OP40',
+    partNumber: '13073-141/0000',
+    quantity: 2,
+    description: 'Rotita scroll mat',
     visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
@@ -98,12 +98,12 @@ export const MOCK_BOM: BomItem[] = [
       '90122-036/0000': true
     }
   },
-  { 
-    id: '7', 
-    station: 'OP60', 
-    partNumber: '12620-734/0000', 
-    quantity: 1, 
-    description: 'Carcasa Stranga', 
+  {
+    id: '7',
+    station: 'OP60',
+    partNumber: '12620-734/0000',
+    quantity: 1,
+    description: 'Carcasa Stranga',
     visualAidBgColor: '#FFFF00',
     variants: {
       '90122-032/0000': true,
@@ -114,12 +114,12 @@ export const MOCK_BOM: BomItem[] = [
       '90122-036/0000': true
     }
   },
-  { 
-    id: '8', 
-    station: 'OP60', 
-    partNumber: '05055-276/0000', 
-    quantity: 2, 
-    description: 'Lever', 
+  {
+    id: '8',
+    station: 'OP60',
+    partNumber: '05055-276/0000',
+    quantity: 2,
+    description: 'Lever',
     visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
@@ -130,12 +130,12 @@ export const MOCK_BOM: BomItem[] = [
       '90122-036/0000': true
     }
   },
-  { 
-    id: '9', 
-    station: 'OP110', 
-    partNumber: '12331-481/0001', 
-    quantity: 1, 
-    description: 'Back cover right', 
+  {
+    id: '9',
+    station: 'OP110',
+    partNumber: '12331-481/0001',
+    quantity: 1,
+    description: 'Back cover right',
     visualAidBgColor: '#CCFFFF',
     variants: {
       '90122-032/0000': true,
@@ -266,8 +266,16 @@ export const DEFAULT_COLORS = [
   '#f4b084', // Orange
   '#cc99ff', // Purple
   '#99ffff', // Teal
-  '#e2f0d9', 
-  '#deebf7', 
-  '#fff2cc', 
+  '#e2f0d9',
+  '#deebf7',
+  '#fff2cc',
   '#fbe5d6'
 ];
+
+export const DROPDOWN_OPTIONS = {
+  owners: ['Customer', 'Preh'],
+  powerSupply: ['AC 220V 50HZ single phase', 'AC 400V 50Hz 3~/N/PE - max. 32A', 'DC 24V'],
+  powerKw: ['1', '1.5', '2', '2.5', '3'],
+  airSupplyBar: ['no', '6', '8'],
+  airSupplyDiam: ['no', '12', '16']
+};

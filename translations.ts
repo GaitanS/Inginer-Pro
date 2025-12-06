@@ -22,7 +22,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     [ViewType.FAILURE_CODES]: 'Failure Code List',
     [ViewType.EOLT]: 'EOLT Parameter',
     [ViewType.CAPACITY]: 'Capacity Calculation',
-    
+
     project: 'Project',
     guides: 'Guides & Support',
     askAi: 'Ask AI Assistant',
@@ -30,7 +30,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     apiKeyRequired: 'API Key required for interactive chat.',
     context: 'Context',
     generating: 'Generating guide...',
-    
+
     oee: 'OEE',
     defectRate: 'Defect Rate',
     unitsProduced: 'Units Produced',
@@ -41,7 +41,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     last30Days: 'Last 30 Days',
     output: 'Output',
     defects: 'Defects',
-    
+
     // Prioritization & Tasks
     priorityWidgetTitle: 'High Priority Tasks',
     dragToReorder: 'Drag and drop to reorder priority',
@@ -63,7 +63,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     qty: 'Qty',
     desc: 'Description',
     picture: 'Picture',
-    
+
     // BOM specific
     sheetBom: 'BOM',
     sheetHistory: 'Document History',
@@ -80,7 +80,10 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     deleteRow: 'Delete Row',
     deleteColumn: 'Delete Column',
     confirmDelete: 'Are you sure?',
-    
+    deleteRowQuestion: 'Delete Row?',
+    confirmDeleteMsg: 'Are you sure you want to delete this row?',
+    completedPct: 'Completed [%]',
+
     // Equipment
     owner: 'Owner',
     eqNumber: 'EQ Number',
@@ -92,7 +95,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     equipIp: 'IP address',
     photoFront: 'Photo Front',
     photoTag: 'Photo Tag',
-    
+
     // Visual Aids
     vaDateCreated: 'Date Created',
     vaCreatedBy: 'Created by',
@@ -104,7 +107,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     generatingDocs: 'Generating Documents...',
     docsGenerated: 'Documents Generated!',
     masterGenerated: 'Master Document Generated!',
-    
+
     processStep: 'Process Step',
     failureMode: 'Failure Mode',
     severity: 'S',
@@ -118,16 +121,16 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     serial: 'Serial',
     maintenance: 'Maint Due',
     status: 'Status',
-    
+
     capUtil: 'Capacity Utilization (%)',
     totalCap: 'Total Capacity',
     reqLoad: 'Required Load',
     capAnalysis: 'Analysis: SMT Line 2 is nearing capacity limits (92%). Consider scheduling overtime or offloading to Line 1 if possible.',
-    
+
     docRepo: 'Documentation Checklist',
     noDocs: 'No documents uploaded yet. Click to upload or drag files here.',
     uploadBtn: 'Upload File',
-    
+
     // Documentation Checklist IATF
     docProgress: 'Documentation Package Progress',
     docComplete: 'Complete',
@@ -172,10 +175,10 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     iatf2025: 'IATF 16949 (2025 Focus)',
     docTraceability: 'Traceability Protocol (MES Integration)',
     docCybersecurity: 'Equipment Cybersecurity Documentation',
-    
+
     systemOnline: 'System Online',
     viewUnderConstruction: 'View Under Construction',
-    
+
     // AI Prompts parts
     aiRole: 'You are an industrial engineering assistant.',
     aiPromptLang: 'Answer in English.'
@@ -200,7 +203,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     [ViewType.FAILURE_CODES]: 'Coduri de Defect',
     [ViewType.EOLT]: 'Parametri EOLT',
     [ViewType.CAPACITY]: 'Calcul Capacitate',
-    
+
     project: 'Proiect',
     guides: 'Ghiduri și Asistență',
     askAi: 'Întreabă Asistentul AI',
@@ -208,7 +211,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     apiKeyRequired: 'Cheie API necesară pentru chat.',
     context: 'Context',
     generating: 'Se generează ghidul...',
-    
+
     oee: 'OEE',
     defectRate: 'Rată Defecte',
     unitsProduced: 'Unități Produse',
@@ -258,6 +261,9 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     deleteRow: 'Șterge Rând',
     deleteColumn: 'Șterge Coloană',
     confirmDelete: 'Sigur dorești să ștergi?',
+    deleteRowQuestion: 'Șterge Rând?',
+    confirmDeleteMsg: 'Sigur doriți să ștergi acest rând?',
+    completedPct: 'Complet [%]',
 
     // Equipment
     owner: 'Proprietar',
@@ -282,7 +288,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     generatingDocs: 'Se generează documentele...',
     docsGenerated: 'Documente Generate!',
     masterGenerated: 'Document Master Generat!',
-    
+
     processStep: 'Etapă Proces',
     failureMode: 'Mod Defectare',
     severity: 'S',
@@ -296,12 +302,12 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     serial: 'Serie',
     maintenance: 'Scadență Ment.',
     status: 'Stare',
-    
+
     capUtil: 'Utilizare Capacitate (%)',
     totalCap: 'Capacitate Totală',
     reqLoad: 'Încărcare Necesară',
     capAnalysis: 'Analiză: Linia SMT 2 se apropie de limită (92%). Luați în considerare ore suplimentare sau mutarea producției pe Linia 1.',
-    
+
     docRepo: 'Checklist Documentație',
     noDocs: 'Niciun document încărcat. Apăsați pentru a încărca.',
     uploadBtn: 'Încarcă Fișier',
@@ -350,10 +356,10 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     iatf2025: 'IATF 16949 (Focus 2025)',
     docTraceability: 'Protocol Trasabilitate (Integrare MES)',
     docCybersecurity: 'Documentație Securitate Cibernetică Echipament',
-    
+
     systemOnline: 'Sistem Online',
     viewUnderConstruction: 'Vizualizare în Construcție',
-    
+
     // AI Prompts parts
     aiRole: 'Ești un asistent inginer industrial. Răspunde în limba Română.',
     aiPromptLang: 'Answer in Romanian.'
