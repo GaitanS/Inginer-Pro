@@ -217,44 +217,43 @@
                 </a>
 
                 <!-- 3. Documentation -->
-                <a href="#"
-                    class="w-full flex items-center justify-between space-x-3 px-2 py-2 rounded-md mb-1 transition-colors relative z-10 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-preh-petrol dark:hover:text-white">
+                <a href="{% url 'documentation' %}"
+                    class="w-full flex items-center justify-between space-x-3 px-2 py-2 rounded-md mb-1 transition-colors relative z-10 {% if active_view == 'documentation' %}bg-gray-100 dark:bg-gray-700 text-preh-petrol dark:text-preh-light-blue font-bold{% else %}text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-preh-petrol dark:hover:text-white{% endif %}">
                     <div class="flex items-center space-x-3 overflow-hidden">
                         <span
-                            class="flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold transition-colors flex-shrink-0 bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400">3</span>
-                        <span class="truncate">Documentation</span>
+                            class="flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold transition-colors flex-shrink-0 {% if active_view == 'documentation' %}bg-preh-petrol text-white{% else %}bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400{% endif %}">3</span>
+                        <span class="truncate">Documentație</span>
                     </div>
                 </a>
 
                 <!-- 4. BOM -->
                 <div class="relative group/parent" id="bom-menu">
-                    <button
-                        onclick="document.getElementById('bom-sub').classList.toggle('hidden'); document.getElementById('bom-chevron').classList.toggle('rotate-90')"
-                        class="w-full flex items-center justify-between space-x-3 px-2 py-2 rounded-md mb-1 transition-colors relative z-10 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-preh-petrol dark:hover:text-white">
+                    <a href="{% url 'bom' %}"
+                        class="w-full flex items-center justify-between space-x-3 px-2 py-2 rounded-md mb-1 transition-colors relative z-10 {% if active_view == 'bom' or active_view == 'visual_aids' %}bg-gray-100 dark:bg-gray-700 text-preh-petrol dark:text-preh-light-blue font-bold{% else %}text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-preh-petrol dark:hover:text-white{% endif %}">
                         <div class="flex items-center space-x-3 overflow-hidden">
                             <span
-                                class="flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold transition-colors flex-shrink-0 bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                                class="flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold transition-colors flex-shrink-0 {% if active_view == 'bom' or active_view == 'visual_aids' %}bg-preh-petrol text-white{% else %}bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400{% endif %}">
                                 4
                             </span>
                             <span class="truncate">BOM</span>
                         </div>
                         <i id="bom-chevron" data-lucide="chevron-right"
                             class="w-3.5 h-3.5 transition-transform duration-200 rotate-90"></i>
-                    </button>
+                    </a>
 
                     <!-- Sub-items -->
                     <div id="bom-sub" class="relative flex flex-col mb-1 ml-3.5">
-                        <!-- 2.1 Visual Aids -->
+                        <!-- 4.1 Visual Aids -->
                         <div class="relative">
                             <div
                                 class="absolute left-[5px] -top-3 h-[28px] w-[15px] border-l-2 border-b-2 border-gray-200 dark:border-gray-700 rounded-bl-lg pointer-events-none transition-colors duration-200 z-0">
                             </div>
 
-                            <a href="#"
-                                class="ml-[22px] flex items-center space-x-2 px-2 py-1.5 rounded-md transition-all relative z-10 w-[calc(100%-24px)] text-gray-500 dark:text-gray-400 hover:text-preh-petrol dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <a href="{% url 'visual_aids' %}"
+                                class="ml-[22px] flex items-center space-x-2 px-2 py-1.5 rounded-md transition-all relative z-10 w-[calc(100%-24px)] {% if active_view == 'visual_aids' %}bg-gray-100 dark:bg-gray-700 text-preh-petrol dark:text-preh-light-blue font-bold{% else %}text-gray-500 dark:text-gray-400 hover:text-preh-petrol dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800{% endif %}">
                                 <span
-                                    class="flex items-center justify-center min-w-[20px] h-4 rounded text-[9px] font-bold transition-colors flex-shrink-0 bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
-                                    2.1
+                                    class="flex items-center justify-center min-w-[20px] h-4 rounded text-[9px] font-bold transition-colors flex-shrink-0 {% if active_view == 'visual_aids' %}bg-preh-petrol text-white{% else %}bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400{% endif %}">
+                                    4.1
                                 </span>
                                 <span class="truncate text-xs">Visual Aids</span>
                             </a>
@@ -355,7 +354,8 @@
         <!-- Top Header -->
         <header
             class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center justify-between px-8 shadow-sm flex-shrink-0 transition-colors duration-200">
-            <h1 class="text-xl font-semibold text-preh-petrol dark:text-preh-light-blue">{{ page_title|default:"Dashboard" }}</h1>
+            <h1 class="text-xl font-semibold text-preh-petrol dark:text-preh-light-blue">{{
+                page_title|default:"Dashboard" }}</h1>
             <div class="flex items-center space-x-4">
                 <div
                     class="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-3 py-1 rounded-full border border-gray-100 dark:border-gray-600">

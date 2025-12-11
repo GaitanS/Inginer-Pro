@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load validation_extras %}
+
+{% block content %}
+<div
+    class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col h-[calc(100vh-180px)] overflow-hidden">
+    <!-- Header -->
+    <div
+        class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
+        <h2 class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
+            <i data-lucide="image" class="w-5 h-5 text-preh-petrol dark:text-preh-light-blue"></i>
+            Visual Aids
+        </h2>
+        <div class="flex gap-2">
+            <form action="{% url 'visual_aids_export_pdf' %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit"
+                    class="flex items-center gap-2 px-3 py-1.5 bg-red-600 text-white rounded hover:bg-red-700 transition-colors text-xs font-bold shadow-sm">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    PDF
+                </button>
+            </form>
+            <form action="{% url 'visual_aids_export_docx' %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit"
+                    class="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-xs font-bold shadow-sm">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    DOCX
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="flex-1 overflow-auto">
+        <table class="w-full text-sm text-left border-collapse">
+            <thead
+                class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100 font-semibold sticky top-0 shadow-sm z-10">
+                <tr>
+                    <th class="p-3 border-b dark:border-gray-700 w-12 text-center">
+                        <div class="flex flex-col items-center">
+                            <span class="text-[10px] mb-1">PDF</span>
+                            <input type="checkbox" id="select-all-pdf" onchange="toggleAll('pdf', this.checked)" />
+                        </div>
+                    </th>
+                    <th class="p-3 border-b dark:border-gray-700 w-12 text-center">
+                        <div class="flex flex-col items-center">
+                            <span class="text-[10px] mb-1">DOCX</span>
+                            <input type="checkbox" id="select-all-docx" onchange="toggleAll('docx', this.checked)" />
+                        </div>
+                    </th>
+                    <th class="p-3 border-b dark:border-gray-700 w-20 text-center">Culoare</th>
+                    <th class="p-3 border-b dark:border-gray-700 min-w-[100px]">Stație</th>
+                    <th class="p-3 border-b dark:border-gray-700 min-w-[120px]">Material</th>
+                    <th class="p-3 border-b dark:border-gray-700 min-w-[200px]">Descriere</th>
+                    <th class="p-3 border-b dark:border-gray-700 w-24 text-center">Imagine</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                {% for item in bom_items %}
+                <tr
+                    class="hover:bg-gray-50 dark:hover:bg-gray-800 {% if forloop.counter|divisibleby:2 %}bg-gray-50 dark:bg-gray-800{% else %}bg-white dark:bg-gray-900{% endif %}">
+                    <td class="p-3 text-center border-r dark:border-gray-700">
+                        <input type="checkbox" name="pdf_{{ item.id }}" class="pdf-checkbox" checked />
+                    </td>
+                    <td class="p-3 text-center border-r dark:border-gray-700">
+                        <input type="checkbox" name="docx_{{ item.id }}" class="docx-checkbox" checked />
+                    </td>
+                    <td class="p-3 text-center border-r dark:border-gray-700">
+                        <input type="color" value="{{ item.visual_aid_bg_color }}"
+                            hx-post="/visual-aids/color/{{ item.id }}/" hx-trigger="change" name="color"
+                            class="w-8 h-6 p-0 border-0 rounded cursor-pointer" />
+                    </td>
+                    <td class="p-3 font-bold dark:text-white border-r dark:border-gray-700">{{ item.station }}</td>
+                    <td class="p-3 text-preh-petrol dark:text-preh-light-blue font-mono border-r dark:border-gray-700">
+                        {{ item.part_number }}</td>
+                    <td class="p-3 dark:text-gray-200 border-r dark:border-gray-700">{{ item.description }}</td>
+                    <td class="p-3 text-center">
+                        <label
+                            class="cursor-pointer p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors inline-block">
+                            <input type="file" accept="image/*" class="hidden"
+                                hx-post="/visual-aids/image/{{ item.id }}/" hx-trigger="change"
+                                hx-encoding="multipart/form-data" name="image" />
+                            {% if item.image %}
+                            <img src="{{ item.image.url }}" class="h-8 w-8 object-cover rounded" />
+                            {% else %}
+                            <i data-lucide="image" class="w-5 h-5 text-gray-400"></i>
+                            {% endif %}
+                        </label>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="p-8 text-center text-gray-400">
+                        Nu există articole BOM. Adăugați articole în pagina BOM.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function toggleAll(type, checked) {
+        const checkboxes = document.querySelectorAll('.' + type + '-checkbox');
+        checkboxes.forEach(cb => cb.checked = checked);
+    }
+
+    // Reinitialize icons after HTMX swap
+    document.body.addEventListener('htmx:afterSwap', function () {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    });
+</script>
+{% endblock %}

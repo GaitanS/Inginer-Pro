@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load validation_extras %}
+
+{% block content %}
+<div
+    class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col h-[calc(100vh-180px)] overflow-hidden">
+    <!-- Tabs -->
+    <div class="flex border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+        <a href="?tab=bom"
+            class="px-6 py-3 text-sm font-medium transition-colors border-b-2 {% if active_tab == 'bom' %}border-preh-petrol text-preh-petrol dark:text-preh-light-blue{% else %}border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400{% endif %}">
+            Listă Materiale (BOM)
+        </a>
+        <a href="?tab=history"
+            class="px-6 py-3 text-sm font-medium transition-colors border-b-2 {% if active_tab == 'history' %}border-preh-petrol text-preh-petrol dark:text-preh-light-blue{% else %}border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400{% endif %}">
+            Istoric Revizii
+        </a>
+    </div>
+
+    {% if active_tab == 'bom' %}
+    <!-- BOM Tab Content -->
+    <div class="flex flex-col h-full">
+        <!-- Toolbar -->
+        <div
+            class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
+            <div class="flex gap-2">
+                <button hx-post="/bom/add/" hx-target="#bom-tbody" hx-swap="beforeend"
+                    class="flex items-center gap-1 px-3 py-1.5 bg-preh-petrol text-white rounded hover:bg-preh-grey-blue text-xs font-medium transition-colors">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                    Adaugă Rând
+                </button>
+            </div>
+            <div class="text-xs text-gray-500">
+                {{ bom_data|length }} articole
+            </div>
+        </div>
+
+        <!-- BOM Table -->
+        <div class="flex-1 overflow-auto">
+            <table class="w-full text-sm text-left border-collapse">
+                <thead
+                    class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100 font-semibold sticky top-0 shadow-sm z-20">
+                    <tr>
+                        <th
+                            class="p-3 border-b dark:border-gray-700 min-w-[150px] sticky left-0 bg-gray-100 dark:bg-gray-800 z-10">
+                            Stație</th>
+                        <th class="p-3 border-b dark:border-gray-700 min-w-[180px]">Material</th>
+                        <th class="p-3 border-b dark:border-gray-700 min-w-[280px]">Descriere</th>
+                        <th class="p-3 border-b dark:border-gray-700 w-16 text-center">Cant.</th>
+                        {% for variant in variants %}
+                        <th class="p-2 border-b dark:border-gray-700 min-w-[100px] text-center text-xs relative group"
+                            style="background-color: {{ variant.color }};">
+                            <div class="flex flex-col items-center">
+                                <input type="color" value="{{ variant.color }}"
+                                    hx-post="/bom/variant/color/{{ variant.id }}/" hx-trigger="change" name="color"
+                                    class="absolute top-1 right-1 w-4 h-4 opacity-0 group-hover:opacity-100 cursor-pointer" />
+                                <span class="truncate max-w-[90px] font-bold block w-full">{{ variant.name }}</span>
+                            </div>
+                        </th>
+                        {% endfor %}
+                        <!-- Add Variant Column -->
+                        <th class="p-3 border-b dark:border-gray-700 min-w-[120px] bg-gray-50 dark:bg-gray-800">
+                            <div id="add-variant-container">
+                                <button onclick="showAddVariant()" id="add-variant-btn"
+                                    class="flex items-center justify-center w-full h-full text-gray-400 hover:text-preh-petrol">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                </button>
+                                <div id="add-variant-form" class="hidden flex items-center space-x-1">
+                                    <input id="new-variant-name"
+                                        class="w-full text-xs px-1 py-1 border rounded dark:bg-gray-700 dark:text-white"
+                                        placeholder="Nume" />
+                                    <button onclick="submitAddVariant()" class="text-green-600 hover:text-green-800">
+                                        <i data-lucide="check" class="w-4 h-4"></i>
+                                    </button>
+                                    <button onclick="hideAddVariant()" class="text-red-600 hover:text-red-800">
+                                        <i data-lucide="x" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="bom-tbody" class="divide-y divide-gray-100 dark:divide-gray-700">
+                    {% for data in bom_data %}
+                    <tr id="bom-row-{{ data.item.id }}"
+                        class="group hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors {% if forloop.counter|divisibleby:2 %}bg-gray-50 dark:bg-gray-800{% else %}bg-white dark:bg-gray-900{% endif %}">
+                        <td class="p-1 sticky left-0 bg-inherit z-10 border-r dark:border-gray-700">
+                            <input value="{{ data.item.station }}" name="station"
+                                hx-post="/bom/update/{{ data.item.id }}/" hx-trigger="blur changed" hx-swap="none"
+                                class="w-full bg-transparent p-2 focus:outline-none dark:text-white font-medium" />
+                        </td>
+                        <td class="p-1 border-r dark:border-gray-700">
+                            <input value="{{ data.item.part_number }}" name="part_number"
+                                hx-post="/bom/update/{{ data.item.id }}/" hx-trigger="blur changed" hx-swap="none"
+                                class="w-full bg-transparent p-2 focus:outline-none dark:text-white font-mono" />
+                        </td>
+                        <td class="p-1 border-r dark:border-gray-700">
+                            <input value="{{ data.item.description }}" name="description"
+                                hx-post="/bom/update/{{ data.item.id }}/" hx-trigger="blur changed" hx-swap="none"
+                                class="w-full bg-transparent p-2 focus:outline-none dark:text-white" />
+                        </td>
+                        <td class="p-1 border-r dark:border-gray-700">
+                            <input type="number" value="{{ data.item.quantity }}" name="quantity"
+                                hx-post="/bom/update/{{ data.item.id }}/" hx-trigger="blur changed" hx-swap="none"
+                                class="w-full bg-transparent p-2 text-center focus:outline-none dark:text-white" />
+                        </td>
+                        {% for variant in variants %}
+                        <td class="p-1 text-center cursor-pointer border-r border-gray-200 dark:border-gray-700"
+                            style="background-color: {{ variant.color }}"
+                            hx-post="/bom/toggle/{{ data.item.id }}/{{ variant.id }}/" hx-swap="outerHTML"
+                            hx-target="#bom-row-{{ data.item.id }}">
+                            <div class="flex items-center justify-center h-full">
+                                {% if data.variant_status|get_item:variant.id %}
+                                <span class="font-bold text-lg select-none">X</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        {% endfor %}
+                        <td class="p-1 text-center">
+                            <button hx-post="/bom/delete/{{ data.item.id }}/" hx-confirm="Ștergeți acest rând?"
+                                hx-target="#bom-row-{{ data.item.id }}" hx-swap="outerHTML"
+                                class="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="100" class="p-8 text-center text-gray-400">
+                            Nu există articole BOM. Apăsați "Adaugă Rând" pentru a începe.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- History Tab Content -->
+    <div class="flex-1 overflow-auto p-6">
+        <table class="w-full text-sm text-left">
+            <thead class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100 font-semibold">
+                <tr>
+                    <th class="p-3 border-b dark:border-gray-700">Versiune</th>
+                    <th class="p-3 border-b dark:border-gray-700">Registru</th>
+                    <th class="p-3 border-b dark:border-gray-700">Modificări</th>
+                    <th class="p-3 border-b dark:border-gray-700">Creat de</th>
+                    <th class="p-3 border-b dark:border-gray-700">Data Creare</th>
+                    <th class="p-3 border-b dark:border-gray-700">Aprobat de</th>
+                    <th class="p-3 border-b dark:border-gray-700">Data Aprobare</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                {% for item in history_items %}
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <td class="p-3 font-mono font-bold text-preh-petrol dark:text-preh-light-blue">v{{ item.version }}
+                    </td>
+                    <td class="p-3">{{ item.register }}</td>
+                    <td class="p-3">{{ item.changes }}</td>
+                    <td class="p-3">{{ item.created_by }}</td>
+                    <td class="p-3">{{ item.date_created }}</td>
+                    <td class="p-3">{{ item.released_by }}</td>
+                    <td class="p-3">{{ item.date_released }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="p-8 text-center text-gray-400">
+                        Nu există istoric revizii.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function showAddVariant() {
+        document.getElementById('add-variant-btn').classList.add('hidden');
+        document.getElementById('add-variant-form').classList.remove('hidden');
+        document.getElementById('new-variant-name').focus();
+    }
+
+    function hideAddVariant() {
+        document.getElementById('add-variant-btn').classList.remove('hidden');
+        document.getElementById('add-variant-form').classList.add('hidden');
+        document.getElementById('new-variant-name').value = '';
+    }
+
+    function submitAddVariant() {
+        const name = document.getElementById('new-variant-name').value.trim();
+        if (!name) {
+            hideAddVariant();
+            return;
+        }
+
+        fetch('/bom/variant/add/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: 'name=' + encodeURIComponent(name)
+        }).then(response => {
+            if (response.headers.get('HX-Redirect')) {
+                window.location.href = response.headers.get('HX-Redirect');
+            } else {
+                window.location.reload();
+            }
+        });
+    }
+
+    document.getElementById('new-variant-name')?.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') submitAddVariant();
+        if (e.key === 'Escape') hideAddVariant();
+    });
+
+    // Reinitialize icons after HTMX swap
+    document.body.addEventListener('htmx:afterSwap', function () {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    });
+</script>
+{% endblock %}

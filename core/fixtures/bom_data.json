@@ -1,0 +1,292 @@
+[
+    {
+        "model": "core.variant",
+        "pk": 1,
+        "fields": {
+            "name": "LHD",
+            "color": "#bdd7ee",
+            "order": 1
+        }
+    },
+    {
+        "model": "core.variant",
+        "pk": 2,
+        "fields": {
+            "name": "RHD",
+            "color": "#f8cbad",
+            "order": 2
+        }
+    },
+    {
+        "model": "core.variant",
+        "pk": 3,
+        "fields": {
+            "name": "EV",
+            "color": "#c6efce",
+            "order": 3
+        }
+    },
+    {
+        "model": "core.variant",
+        "pk": 4,
+        "fields": {
+            "name": "Hybrid",
+            "color": "#ffeb9c",
+            "order": 4
+        }
+    },
+    {
+        "model": "core.bomitem",
+        "pk": 1,
+        "fields": {
+            "station": "ST010",
+            "part_number": "10546-001-A",
+            "description": "Main PCB Assembly",
+            "quantity": 1,
+            "visual_aid_bg_color": "#CCFFFF",
+            "order": 1
+        }
+    },
+    {
+        "model": "core.bomitem",
+        "pk": 2,
+        "fields": {
+            "station": "ST010",
+            "part_number": "10546-002-B",
+            "description": "Housing Lower Part",
+            "quantity": 1,
+            "visual_aid_bg_color": "#CCFFFF",
+            "order": 2
+        }
+    },
+    {
+        "model": "core.bomitem",
+        "pk": 3,
+        "fields": {
+            "station": "ST020",
+            "part_number": "10546-003-C",
+            "description": "Display Module",
+            "quantity": 1,
+            "visual_aid_bg_color": "#FFCCCC",
+            "order": 3
+        }
+    },
+    {
+        "model": "core.bomitem",
+        "pk": 4,
+        "fields": {
+            "station": "ST020",
+            "part_number": "10546-004-D",
+            "description": "Connector Set",
+            "quantity": 4,
+            "visual_aid_bg_color": "#CCFFCC",
+            "order": 4
+        }
+    },
+    {
+        "model": "core.bomitem",
+        "pk": 5,
+        "fields": {
+            "station": "ST030",
+            "part_number": "10546-005-E",
+            "description": "Fastener Kit M3x8",
+            "quantity": 12,
+            "visual_aid_bg_color": "#FFFFCC",
+            "order": 5
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 1,
+        "fields": {
+            "bom_item": 1,
+            "variant": 1,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 2,
+        "fields": {
+            "bom_item": 1,
+            "variant": 2,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 3,
+        "fields": {
+            "bom_item": 1,
+            "variant": 3,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 4,
+        "fields": {
+            "bom_item": 1,
+            "variant": 4,
+            "is_applicable": false
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 5,
+        "fields": {
+            "bom_item": 2,
+            "variant": 1,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 6,
+        "fields": {
+            "bom_item": 2,
+            "variant": 2,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 7,
+        "fields": {
+            "bom_item": 2,
+            "variant": 3,
+            "is_applicable": false
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 8,
+        "fields": {
+            "bom_item": 2,
+            "variant": 4,
+            "is_applicable": false
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 9,
+        "fields": {
+            "bom_item": 3,
+            "variant": 1,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 10,
+        "fields": {
+            "bom_item": 3,
+            "variant": 2,
+            "is_applicable": false
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 11,
+        "fields": {
+            "bom_item": 3,
+            "variant": 3,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 12,
+        "fields": {
+            "bom_item": 3,
+            "variant": 4,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 13,
+        "fields": {
+            "bom_item": 4,
+            "variant": 1,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 14,
+        "fields": {
+            "bom_item": 4,
+            "variant": 2,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 15,
+        "fields": {
+            "bom_item": 4,
+            "variant": 3,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 16,
+        "fields": {
+            "bom_item": 4,
+            "variant": 4,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 17,
+        "fields": {
+            "bom_item": 5,
+            "variant": 1,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 18,
+        "fields": {
+            "bom_item": 5,
+            "variant": 2,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 19,
+        "fields": {
+            "bom_item": 5,
+            "variant": 3,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.bomitemvariant",
+        "pk": 20,
+        "fields": {
+            "bom_item": 5,
+            "variant": 4,
+            "is_applicable": true
+        }
+    },
+    {
+        "model": "core.dochistoryitem",
+        "pk": 1,
+        "fields": {
+            "version": "1.0",
+            "register": "REG-001",
+            "changes": "Initial release",
+            "created_by": "System Admin",
+            "date_created": "2024-01-15",
+            "released_by": "Quality Manager",
+            "date_released": "2024-01-20",
+            "order": 1
+        }
+    }
+]

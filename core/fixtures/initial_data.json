@@ -420,5 +420,83 @@
             "example": "Schema electrică corespunde cu tabloul.",
             "order": 2
         }
+    },
+    {
+        "model": "core.validationchecklistitem",
+        "pk": 17,
+        "fields": {
+            "category": 2,
+            "ref_iatf": "7.1.4 (ESD)",
+            "ref_vda": "P6.4.3 (ESD Cert)",
+            "test": "Verifică certificatul ESD pentru stație după aducerea în plant. Solicită documentul de la furnizor/integrator.",
+            "expected": "Certificat Valid. Stația are certificat ESD emis după instalare, cu valori de rezistență conformă (<10^9 Ohm).",
+            "example": "Certificat ESD datat după data instalării, cu măsurători pe suprafețe de lucru și împământare.",
+            "order": 5
+        }
+    },
+    {
+        "model": "core.validationchecklistitem",
+        "pk": 18,
+        "fields": {
+            "category": 3,
+            "ref_iatf": "7.1.5.1.1 (Capabilitate)",
+            "ref_vda": "P6.4.1 (Print Quality)",
+            "test": "Verifică capabilitatea pe calitatea etichetei printate pe produsul finit. Măsoară lizibilitate, contrast și aderență.",
+            "expected": "Cpk >= 1.33. Eticheta este lizibilă, centrată, fără pete sau zone neclare. Aderența rezistă la test de zgâriere.",
+            "example": "Scanează 50 etichete consecutive - toate citite corect de scanner. Contrast minim 80%.",
+            "order": 4
+        }
+    },
+    {
+        "model": "core.validationchecklistitem",
+        "pk": 19,
+        "fields": {
+            "category": 3,
+            "ref_iatf": "7.1.5.1.1 (MSA)",
+            "ref_vda": "P6.4.1 (Corelație)",
+            "test": "Compară valorile EOL măsurate pe linie cu valorile Vericube. Rulează MSA 1 pentru corelație între echipamente.",
+            "expected": "Diferență < 5%. Valorile EOL și Vericube trebuie să fie corelate. Bias acceptabil.",
+            "example": "10 piese măsurate pe ambele: EOL=1.20Nm, Vericube=1.18Nm → Bias=1.7% OK.",
+            "order": 5
+        }
+    },
+    {
+        "model": "core.validationchecklistitem",
+        "pk": 20,
+        "fields": {
+            "category": 3,
+            "ref_iatf": "7.1.5.1.1 (MSA 1)",
+            "ref_vda": "P6.4.1 (Repetabilitate)",
+            "test": "MSA 1 cu șurubelnița electrică: 3 operatori, fiecare măsoară aceeași piesă de 10 ori. Calculează repetabilitate.",
+            "expected": "%GRR < 10% (Excelent) sau < 30% (Acceptabil). Variația între operatori minimă.",
+            "example": "Operator A: 1.19-1.21Nm, Operator B: 1.18-1.21Nm, Operator C: 1.19-1.22Nm → GRR=8.5% OK.",
+            "order": 6
+        }
+    },
+    {
+        "model": "core.validationchecklistitem",
+        "pk": 21,
+        "fields": {
+            "category": 3,
+            "ref_iatf": "7.1.5.1.1 (MSA 2)",
+            "ref_vda": "P6.4.1 (Reproducibilitate)",
+            "test": "MSA 2 cu șurubelnița electrică: 3 operatori, 10 piese diferite, fiecare piesă măsurată de 3 ori. Calculează reproducibilitate.",
+            "expected": "%GRR < 10% (Excelent) sau < 30% (Acceptabil). ndc (număr categorii distincte) >= 5.",
+            "example": "Studiu MSA2 complet cu Minitab: GRR=12%, ndc=7 → Acceptabil pentru producție.",
+            "order": 7
+        }
+    },
+    {
+        "model": "core.validationchecklistitem",
+        "pk": 22,
+        "fields": {
+            "category": 3,
+            "ref_iatf": "8.5.1.6 (Verificare)",
+            "ref_vda": "P6.2.3 (Start-up)",
+            "test": "Verifică șurubelnița dinamometrică la start fiecare schimb. Compară valoarea citită cu etalon calibrat.",
+            "expected": "Deviație < 2%. Înregistrare în fișa de verificare zilnică. Șurubelnița se folosește doar după confirmare.",
+            "example": "Etalon=1.20Nm, Citire=1.19Nm → Deviație=0.8% OK. Operator semnează fișa.",
+            "order": 8
+        }
     }
 ]

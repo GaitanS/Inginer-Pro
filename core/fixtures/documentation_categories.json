@@ -1,0 +1,277 @@
+[
+    {
+        "model": "core.documentationcategory",
+        "pk": 1,
+        "fields": {
+            "code": "general",
+            "title_key": "docGeneral",
+            "desc_key": "docGeneralDesc",
+            "order": 1,
+            "is_highlighted": false
+        }
+    },
+    {
+        "model": "core.documentationcategory",
+        "pk": 2,
+        "fields": {
+            "code": "electrical",
+            "title_key": "docElectrical",
+            "desc_key": "docElectricalDesc",
+            "order": 2,
+            "is_highlighted": false
+        }
+    },
+    {
+        "model": "core.documentationcategory",
+        "pk": 3,
+        "fields": {
+            "code": "maintenance",
+            "title_key": "docMaintenance",
+            "desc_key": "docMaintenanceDesc",
+            "order": 3,
+            "is_highlighted": false
+        }
+    },
+    {
+        "model": "core.documentationcategory",
+        "pk": 4,
+        "fields": {
+            "code": "quality",
+            "title_key": "docQuality",
+            "desc_key": "docQualityDesc",
+            "order": 4,
+            "is_highlighted": false
+        }
+    },
+    {
+        "model": "core.documentationcategory",
+        "pk": 5,
+        "fields": {
+            "code": "safety",
+            "title_key": "docSafety",
+            "desc_key": "docSafetyDesc",
+            "order": 5,
+            "is_highlighted": false
+        }
+    },
+    {
+        "model": "core.documentationcategory",
+        "pk": 6,
+        "fields": {
+            "code": "training",
+            "title_key": "docTraining",
+            "desc_key": "docTrainingDesc",
+            "order": 6,
+            "is_highlighted": false
+        }
+    },
+    {
+        "model": "core.documentationcategory",
+        "pk": 7,
+        "fields": {
+            "code": "iatf2025",
+            "title_key": "iatf2025",
+            "desc_key": "",
+            "order": 7,
+            "is_highlighted": true
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 1,
+        "fields": {
+            "category": 1,
+            "item_key": "docUserManual",
+            "order": 1
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 2,
+        "fields": {
+            "category": 1,
+            "item_key": "docLayout",
+            "order": 2
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 3,
+        "fields": {
+            "category": 1,
+            "item_key": "docTechSpecs",
+            "order": 3
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 4,
+        "fields": {
+            "category": 2,
+            "item_key": "docEPlan",
+            "order": 1
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 5,
+        "fields": {
+            "category": 2,
+            "item_key": "docPneumatic",
+            "order": 2
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 6,
+        "fields": {
+            "category": 2,
+            "item_key": "docIOList",
+            "order": 3
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 7,
+        "fields": {
+            "category": 2,
+            "item_key": "docBackup",
+            "order": 4
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 8,
+        "fields": {
+            "category": 2,
+            "item_key": "docAlarmList",
+            "order": 5
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 9,
+        "fields": {
+            "category": 3,
+            "item_key": "docPMPlan",
+            "order": 1
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 10,
+        "fields": {
+            "category": 3,
+            "item_key": "docSpareParts",
+            "order": 2
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 11,
+        "fields": {
+            "category": 3,
+            "item_key": "docMechDrawings",
+            "order": 3
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 12,
+        "fields": {
+            "category": 4,
+            "item_key": "docCE",
+            "order": 1
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 13,
+        "fields": {
+            "category": 4,
+            "item_key": "docRisk",
+            "order": 2
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 14,
+        "fields": {
+            "category": 4,
+            "item_key": "docCapability",
+            "order": 3
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 15,
+        "fields": {
+            "category": 4,
+            "item_key": "docMSA",
+            "order": 4
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 16,
+        "fields": {
+            "category": 4,
+            "item_key": "docParams",
+            "order": 5
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 17,
+        "fields": {
+            "category": 5,
+            "item_key": "docSafetyVal",
+            "order": 1
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 18,
+        "fields": {
+            "category": 5,
+            "item_key": "docLOTO",
+            "order": 2
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 19,
+        "fields": {
+            "category": 6,
+            "item_key": "docTrainingMat",
+            "order": 1
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 20,
+        "fields": {
+            "category": 6,
+            "item_key": "docTrainingReg",
+            "order": 2
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 21,
+        "fields": {
+            "category": 7,
+            "item_key": "docTraceability",
+            "order": 1
+        }
+    },
+    {
+        "model": "core.documentationchecklistitem",
+        "pk": 22,
+        "fields": {
+            "category": 7,
+            "item_key": "docCybersecurity",
+            "order": 2
+        }
+    }
+]
