@@ -425,13 +425,13 @@
         "model": "core.validationchecklistitem",
         "pk": 17,
         "fields": {
-            "category": 2,
-            "ref_iatf": "7.1.4 (ESD)",
-            "ref_vda": "P6.4.3 (ESD Cert)",
-            "test": "Verifică certificatul ESD pentru stație după aducerea în plant. Solicită documentul de la furnizor/integrator.",
-            "expected": "Certificat Valid. Stația are certificat ESD emis după instalare, cu valori de rezistență conformă (<10^9 Ohm).",
-            "example": "Certificat ESD datat după data instalării, cu măsurători pe suprafețe de lucru și împământare.",
-            "order": 5
+            "category": 5,
+            "ref_iatf": "7.5.3.2 (Documentație)",
+            "ref_vda": "P6.4.2 (Certificate)",
+            "test": "Verifică existența CERTIFICATULUI ESD pentru stație (SR EN 61340-5-1) emis după aducerea în plant. NU e aceeași verificare ca măsurarea fizică ESD!",
+            "expected": "Document prezent. Certificat ESD valid conform SR EN 61340-5-1, emis de furnizor/integrator după instalare, cu raport de măsurători.",
+            "example": "Certificat PDF/fizic cu: data emiterii post-instalare, valori rezistență <10^9Ω, semnătură emitent.",
+            "order": 3
         }
     },
     {
