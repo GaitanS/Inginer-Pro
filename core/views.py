@@ -311,7 +311,11 @@ def device_add(request, equipment_id):
         <td class="p-0 border-r border-gray-700"><input class="w-full bg-transparent p-2 focus:outline-none focus:bg-gray-700 text-gray-200" value="{device.name}" hx-post="/device/update/{device.id}/" hx-trigger="change" hx-vals='{{"field": "name"}}' hx-swap="none" name="value"></td>
         <td class="p-0"><input class="w-full bg-transparent p-2 focus:outline-none focus:bg-gray-700 font-mono text-preh-light-blue" value="" hx-post="/device/update/{device.id}/" hx-trigger="change" hx-vals='{{"field": "ip_address"}}' hx-swap="none" name="value"></td>
     </tr>'''
-    return HttpResponse(html)
+    
+    # OOB swap to remove "No devices" empty row for this equipment
+    oob_remove_empty = f'''<tr id="empty-row-{equipment_id}" hx-swap-oob="delete"></tr>'''
+    
+    return HttpResponse(html + oob_remove_empty)
 
 
 @require_POST
