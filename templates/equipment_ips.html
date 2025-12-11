@@ -21,8 +21,7 @@
                     <h3 class="font-bold text-lg text-white">{{ equip.station }}</h3>
                     {% with progress=equip.get_device_completion %}
                     <span
-                        class="text-xs px-2 py-0.5 rounded-full border {% if progress == 100 %}bg-green-900/50 text-green-400 border-green-700{% elif progress >= 50 %}bg-yellow-900/50 text-yellow-400 border-yellow-700{% else %}bg-gray-700 text-gray-400 border-gray-600{% endif %}">{{
-                        progress }}%</span>
+                        class="text-xs px-2 py-0.5 rounded-full border {% if progress == 100 %}bg-green-900/50 text-green-400 border-green-700{% elif progress >= 50 %}bg-yellow-900/50 text-yellow-400 border-yellow-700{% else %}bg-gray-700 text-gray-400 border-gray-600{% endif %}">{{ progress }}%</span>
                     {% endwith %}
                 </div>
                 <button hx-post="{% url 'device_add' equip.id %}" hx-target="#devices-{{ equip.id }}"
