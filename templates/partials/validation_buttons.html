@@ -1,0 +1,12 @@
+<!-- HTMX Partial: Validation Buttons for a checklist item -->
+<div id="buttons-{{ item.id }}" class="flex flex-col gap-2 items-center">
+    <div class="flex gap-1 w-full">
+        <button hx-post="{% url 'submit_validation' equipment.id item.id %}" hx-vals='{"status": "OK"}'
+            hx-target="#buttons-{{ item.id }}" hx-swap="outerHTML"
+            class="flex-1 py-1 px-2 rounded text-xs font-bold transition-all border {% if status == 'OK' %}bg-green-600 border-green-500 text-white{% else %}bg-gray-800 border-gray-600 text-gray-400 hover:border-green-500 hover:text-green-500{% endif %}">OK</button>
+        <button hx-post="{% url 'submit_validation' equipment.id item.id %}" hx-vals='{"status": "NOK"}'
+            hx-target="#buttons-{{ item.id }}" hx-swap="outerHTML"
+            class="flex-1 py-1 px-2 rounded text-xs font-bold transition-all border {% if status == 'NOK' %}bg-red-600 border-red-500 text-white{% else %}bg-gray-800 border-gray-600 text-gray-400 hover:border-red-500 hover:text-red-500{% endif %}">NOK</button>
+    </div>
+    {% if status %}<span class="text-[10px] text-gray-500 uppercase">Validat</span>{% endif %}
+</div>

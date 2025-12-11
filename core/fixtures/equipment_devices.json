@@ -1,0 +1,202 @@
+[
+    {
+        "model": "core.equipmentdevice",
+        "pk": 1,
+        "fields": {
+            "equipment": 8,
+            "device_type": "PLC 1217C DC/DC/DC",
+            "name": "OP50-1=PLC-KF1",
+            "ip_address": "172.19.123.150"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 2,
+        "fields": {
+            "equipment": 8,
+            "device_type": "WAGO",
+            "name": "OP50-1=PLC-KF2",
+            "ip_address": "172.19.123.151"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 3,
+        "fields": {
+            "equipment": 8,
+            "device_type": "HMI KTP700",
+            "name": "KTP700_OP50-1",
+            "ip_address": "172.19.123.152"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 4,
+        "fields": {
+            "equipment": 8,
+            "device_type": "Vision Sensor",
+            "name": "OP50-1-ST10-CR",
+            "ip_address": "172.19.123.153"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 5,
+        "fields": {
+            "equipment": 9,
+            "device_type": "PLC 1217C DC/DC/DC",
+            "name": "OP50-2=PLC-KF1",
+            "ip_address": "172.19.123.50"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 6,
+        "fields": {
+            "equipment": 9,
+            "device_type": "WAGO",
+            "name": "OP50-2=PLC-KF2",
+            "ip_address": "172.19.123.51"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 7,
+        "fields": {
+            "equipment": 9,
+            "device_type": "HMI KTP700",
+            "name": "KTP700_OP50-2",
+            "ip_address": "172.19.123.52"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 8,
+        "fields": {
+            "equipment": 9,
+            "device_type": "Vision Sensor",
+            "name": "OP50-2-ST10-CR",
+            "ip_address": "172.19.123.53"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 9,
+        "fields": {
+            "equipment": 10,
+            "device_type": "PLC 1217C DC/DC/DC",
+            "name": "OP60-1=PLC-KF1",
+            "ip_address": "172.19.123.60"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 10,
+        "fields": {
+            "equipment": 10,
+            "device_type": "WAGO",
+            "name": "OP60-1=PLC-KF2",
+            "ip_address": "172.19.123.61"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 11,
+        "fields": {
+            "equipment": 10,
+            "device_type": "HMI KTP700",
+            "name": "KTP700_OP60-1",
+            "ip_address": "172.19.123.62"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 12,
+        "fields": {
+            "equipment": 10,
+            "device_type": "Vision Sensor",
+            "name": "OP60-1-CR-UP",
+            "ip_address": "172.19.123.64"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 13,
+        "fields": {
+            "equipment": 10,
+            "device_type": "Vision Sensor",
+            "name": "OP60-1-OB-UP",
+            "ip_address": "172.19.123.65"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 14,
+        "fields": {
+            "equipment": 10,
+            "device_type": "Vision Sensor",
+            "name": "OP60-1-CR-DOWN",
+            "ip_address": "172.19.123.66"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 15,
+        "fields": {
+            "equipment": 11,
+            "device_type": "PLC 1217C DC/DC/DC",
+            "name": "OP60-2=PLC-KF1",
+            "ip_address": "172.19.123.160"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 16,
+        "fields": {
+            "equipment": 11,
+            "device_type": "WAGO",
+            "name": "OP60-2=PLC-KF2",
+            "ip_address": "172.19.123.161"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 17,
+        "fields": {
+            "equipment": 11,
+            "device_type": "HMI KTP700",
+            "name": "KTP700_OP60-2",
+            "ip_address": "172.19.123.162"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 18,
+        "fields": {
+            "equipment": 11,
+            "device_type": "Vision Sensor",
+            "name": "OP60-2-CR-UP",
+            "ip_address": "172.19.123.164"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 19,
+        "fields": {
+            "equipment": 11,
+            "device_type": "Vision Sensor",
+            "name": "OP60-2-OB-UP",
+            "ip_address": "172.19.123.165"
+        }
+    },
+    {
+        "model": "core.equipmentdevice",
+        "pk": 20,
+        "fields": {
+            "equipment": 11,
+            "device_type": "Vision Sensor",
+            "name": "OP60-2-CR-DOWN",
+            "ip_address": "172.19.123.166"
+        }
+    }
+]

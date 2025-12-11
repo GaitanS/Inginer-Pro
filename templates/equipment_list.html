@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="bg-gray-700 rounded-lg border border-gray-600 shadow-sm p-6 overflow-hidden flex flex-col h-full relative">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-white">Equipment List</h2>
+        <div class="flex items-center gap-2">
+            <a href="{% url 'equipment' %}" class="px-4 py-1.5 bg-preh-petrol text-white rounded text-xs font-medium">List</a>
+            <a href="{% url 'equipment_ips' %}" class="px-4 py-1.5 bg-gray-600 text-gray-300 rounded text-xs font-medium hover:bg-gray-500">IPs</a>
+            <a href="{% url 'equipment_photos' %}" class="px-4 py-1.5 bg-gray-600 text-gray-300 rounded text-xs font-medium hover:bg-gray-500">Photos</a>
+            <button id="add-row-btn" hx-post="{% url 'equipment_add' %}" hx-target="#equipment-tbody" hx-swap="beforeend" class="flex items-center gap-1 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-medium transition-colors ml-2"><i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Row</button>
+        </div>
+    </div>
+    <div class="flex-1 overflow-auto border border-gray-600 rounded-lg">
+        <table class="w-full text-sm text-left border-collapse">
+            <thead class="bg-gray-800 text-gray-100 font-semibold sticky top-0 shadow-sm z-10">
+                <tr>
+                    <th class="p-3 border-b border-gray-700 w-24 text-center uppercase text-xs">Completed [%]</th>
+                    <th class="p-3 border-b border-gray-700 w-12 text-center text-[10px] leading-tight text-red-500 border-r border-gray-700 uppercase">Delete Row?</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[120px] border-r border-gray-700 uppercase text-xs">Station</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[130px] border-r border-gray-700 uppercase text-xs">Owner</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[100px] border-r border-gray-700 uppercase text-xs">EQ Number</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[200px] border-r border-gray-700 uppercase text-xs">Power Supply</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[100px] border-r border-gray-700 uppercase text-xs">Power/KW</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[120px] border-r border-gray-700 uppercase text-xs">Air Supply x bar</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[180px] border-r border-gray-700 uppercase text-xs">Air Supply tub di [mm]</th>
+                </tr>
+            </thead>
+            <tbody id="equipment-tbody" class="divide-y divide-gray-700">
+                {% for equip in equipment_list %}
+                <tr id="equipment-row-{{ equip.id }}" class="transition-colors group {% cycle 'bg-gray-900' 'bg-gray-800' %}">
+                    <td class="p-2 text-center border-r border-gray-700">{% with progress=equip.get_validation_progress %}<span id="progress-{{ equip.id }}" class="text-xs font-bold {% if progress == 100 %}text-green-500{% elif progress >= 50 %}text-orange-500{% else %}text-gray-400{% endif %}">{{ progress }}%</span>{% endwith %}</td>
+                    <td class="p-0 text-center border-r border-gray-700"><button onclick="confirmDelete({{ equip.id }}, '{{ equip.station }}')" class="p-2 text-red-500 transition-opacity hover:bg-red-900/20 rounded-full m-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+                    <td class="p-0 border-r border-gray-700"><input class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none" type="text" value="{{ equip.station }}" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "station"}' hx-swap="none" name="value"></td>
+                    <td class="p-0 border-r border-gray-700"><select class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none appearance-none" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "owner"}' hx-swap="none" name="value"><option value="" class="bg-gray-800">-</option><option value="Customer" class="bg-gray-800" {% if equip.owner == 'Customer' %}selected{% endif %}>Customer</option><option value="Preh" class="bg-gray-800" {% if equip.owner == 'Preh' %}selected{% endif %}>Preh</option></select></td>
+                    <td class="p-0 border-r border-gray-700"><input class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none" type="text" value="{{ equip.eq_number }}" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "eq_number"}' hx-swap="none" name="value"></td>
+                    <td class="p-0 border-r border-gray-700"><select class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none appearance-none" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "power_supply"}' hx-swap="none" name="value"><option value="" class="bg-gray-800">-</option><option value="AC 220V 50HZ single phase" class="bg-gray-800" {% if equip.power_supply == 'AC 220V 50HZ single phase' %}selected{% endif %}>AC 220V 50HZ single phase</option><option value="AC 400V 50Hz 3~/N/PE - max. 32A" class="bg-gray-800" {% if equip.power_supply == 'AC 400V 50Hz 3~/N/PE - max. 32A' %}selected{% endif %}>AC 400V 50Hz 3~/N/PE - max. 32A</option><option value="DC 24V" class="bg-gray-800" {% if equip.power_supply == 'DC 24V' %}selected{% endif %}>DC 24V</option></select></td>
+                    <td class="p-0 border-r border-gray-700"><select class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none appearance-none" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "power_kw"}' hx-swap="none" name="value"><option value="" class="bg-gray-800">-</option><option value="1" class="bg-gray-800" {% if equip.power_kw == '1' %}selected{% endif %}>1</option><option value="1.5" class="bg-gray-800" {% if equip.power_kw == '1.5' %}selected{% endif %}>1.5</option><option value="2" class="bg-gray-800" {% if equip.power_kw == '2' %}selected{% endif %}>2</option><option value="2.5" class="bg-gray-800" {% if equip.power_kw == '2.5' %}selected{% endif %}>2.5</option><option value="3" class="bg-gray-800" {% if equip.power_kw == '3' %}selected{% endif %}>3</option></select></td>
+                    <td class="p-0 border-r border-gray-700"><select class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none appearance-none" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "air_supply_bar"}' hx-swap="none" name="value"><option value="" class="bg-gray-800">-</option><option value="no" class="bg-gray-800" {% if equip.air_supply_bar == 'no' %}selected{% endif %}>no</option><option value="6" class="bg-gray-800" {% if equip.air_supply_bar == '6' %}selected{% endif %}>6</option><option value="8" class="bg-gray-800" {% if equip.air_supply_bar == '8' %}selected{% endif %}>8</option></select></td>
+                    <td class="p-0 border-r border-gray-700"><select class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none appearance-none" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "air_supply_diam"}' hx-swap="none" name="value"><option value="" class="bg-gray-800">-</option><option value="no" class="bg-gray-800" {% if equip.air_supply_diam == 'no' %}selected{% endif %}>no</option><option value="12" class="bg-gray-800" {% if equip.air_supply_diam == '12' %}selected{% endif %}>12</option><option value="16" class="bg-gray-800" {% if equip.air_supply_diam == '16' %}selected{% endif %}>16</option></select></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="9" class="p-8 text-center text-gray-400">No equipment found. Click "+ Add Row" to add equipment.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="delete-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-gray-800 rounded-lg p-6 max-w-sm w-full mx-4 border border-gray-700">
+        <h3 class="text-lg font-bold text-white mb-2">Are you sure?</h3>
+        <p class="text-gray-400 mb-6">Are you sure you want to delete this row?</p>
+        <div class="flex justify-end gap-3">
+            <button onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600 transition-colors">Cancel</button>
+            <button id="confirm-delete-btn" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">Delete</button>
+        </div>
+    </div>
+</div>
+<script>
+let deleteEquipmentId = null;
+function confirmDelete(id, stationName) { deleteEquipmentId = id; document.getElementById('delete-modal').classList.remove('hidden'); }
+function closeDeleteModal() { document.getElementById('delete-modal').classList.add('hidden'); deleteEquipmentId = null; }
+document.getElementById('confirm-delete-btn').addEventListener('click', function() { if (deleteEquipmentId) { htmx.ajax('POST', '/equipment/delete/' + deleteEquipmentId + '/', {target: '#equipment-row-' + deleteEquipmentId, swap: 'outerHTML'}); closeDeleteModal(); } });
+document.getElementById('delete-modal').addEventListener('click', function(e) { if (e.target === this) closeDeleteModal(); });
+document.body.addEventListener('htmx:afterSwap', function() { if (typeof lucide !== 'undefined') lucide.createIcons(); });
+</script>
+{% endblock %}
+

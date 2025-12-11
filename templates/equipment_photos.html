@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="bg-gray-700 rounded-lg border border-gray-600 shadow-sm p-6 overflow-auto h-full">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-white">Equipment Photos</h2>
+        <div class="flex items-center gap-2">
+            <a href="{% url 'equipment' %}" class="px-4 py-1.5 bg-gray-600 text-gray-300 rounded text-xs font-medium hover:bg-gray-500">List</a>
+            <a href="{% url 'equipment_ips' %}" class="px-4 py-1.5 bg-gray-600 text-gray-300 rounded text-xs font-medium hover:bg-gray-500">IPs</a>
+            <a href="{% url 'equipment_photos' %}" class="px-4 py-1.5 bg-preh-petrol text-white rounded text-xs font-medium">Photos</a>
+        </div>
+    </div>
+    <div class="border border-gray-600 rounded-lg overflow-hidden">
+        <table class="w-full text-sm text-left">
+            <thead class="bg-gray-800 text-gray-300">
+                <tr>
+                    <th class="p-3 border-b border-gray-700 w-1/5">Station</th>
+                    <th class="p-3 border-b border-gray-700 w-1/5">EQ Number</th>
+                    <th class="p-3 border-b border-gray-700 w-2/5">Photo Front</th>
+                    <th class="p-3 border-b border-gray-700 w-2/5">Photo Tag</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-700">
+                {% for equip in equipment_list %}
+                <tr class="hover:bg-gray-800/50">
+                    <td class="p-3 text-white font-medium border-r border-gray-700">{{ equip.station }}</td>
+                    <td class="p-3 text-gray-300 border-r border-gray-700">{{ equip.eq_number|default:"-" }}</td>
+                    <td class="p-3 border-r border-gray-700">
+                        <div id="photo-front-{{ equip.id }}" class="border-2 border-dashed border-gray-600 rounded-lg p-4 h-24 flex flex-col items-center justify-center cursor-pointer hover:border-gray-500 hover:bg-gray-800/30 transition-colors" onclick="document.getElementById('upload-front-{{ equip.id }}').click()">
+                            {% if equip.photo_front %}
+                            <img src="{{ equip.photo_front }}" alt="Front photo" class="max-h-20 object-contain">
+                            {% else %}
+                            <i data-lucide="image" class="w-6 h-6 text-gray-500 mb-1"></i>
+                            <span class="text-xs text-gray-500">Upload File</span>
+                            {% endif %}
+                        </div>
+                        <input type="file" id="upload-front-{{ equip.id }}" class="hidden" accept="image/*" onchange="uploadPhoto({{ equip.id }}, 'photo_front', this.files[0])">
+                    </td>
+                    <td class="p-3">
+                        <div id="photo-tag-{{ equip.id }}" class="border-2 border-dashed border-gray-600 rounded-lg p-4 h-24 flex flex-col items-center justify-center cursor-pointer hover:border-gray-500 hover:bg-gray-800/30 transition-colors" onclick="document.getElementById('upload-tag-{{ equip.id }}').click()">
+                            {% if equip.photo_tag %}
+                            <img src="{{ equip.photo_tag }}" alt="Tag photo" class="max-h-20 object-contain">
+                            {% else %}
+                            <i data-lucide="image" class="w-6 h-6 text-gray-500 mb-1"></i>
+                            <span class="text-xs text-gray-500">Upload File</span>
+                            {% endif %}
+                        </div>
+                        <input type="file" id="upload-tag-{{ equip.id }}" class="hidden" accept="image/*" onchange="uploadPhoto({{ equip.id }}, 'photo_tag', this.files[0])">
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="p-8 text-center text-gray-400">No equipment found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function uploadPhoto(equipId, field, file) {
+    if (!file) return;
+    
+    // For now, show a placeholder message. Real upload would require backend file handling.
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var targetId = field === 'photo_front' ? 'photo-front-' + equipId : 'photo-tag-' + equipId;
+        var container = document.getElementById(targetId);
+        container.innerHTML = '<img src="' + e.target.result + '" alt="Photo" class="max-h-20 object-contain">';
+        
+        // Save URL to database (using data URL for demo)
+        var formData = new FormData();
+        formData.append('field', field);
+        formData.append('value', e.target.result.substring(0, 200)); // Truncated for demo
+        
+        fetch('/equipment/update/' + equipId + '/', {
+            method: 'POST',
+            headers: {'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
+            body: formData
+        });
+    };
+    reader.readAsDataURL(file);
+}
+</script>
+{% endblock %}
