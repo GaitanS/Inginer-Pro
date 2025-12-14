@@ -7,7 +7,6 @@ urlpatterns = [
     # Equipment views
     path('equipment/', views.equipment, name='equipment'),
     path('equipment/ips/', views.equipment_ips, name='equipment_ips'),
-    path('equipment/photos/', views.equipment_photos, name='equipment_photos'),
     path('equipment/add/', views.equipment_add, name='equipment_add'),
     path('equipment/update/<int:equipment_id>/', views.equipment_update, name='equipment_update'),
     path('equipment/delete/<int:equipment_id>/', views.equipment_delete, name='equipment_delete'),

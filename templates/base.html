@@ -186,21 +186,6 @@
                                 <span class="truncate text-xs">Equipment IPs</span>
                             </a>
                         </div>
-
-                        <!-- 1.2 Equipment Photos -->
-                        <div class="relative">
-                            <div
-                                class="absolute left-[5px] -top-[38px] h-[64px] w-[15px] border-l-2 border-b-2 border-gray-200 dark:border-gray-700 rounded-bl-lg pointer-events-none transition-colors duration-200 z-0">
-                            </div>
-                            <a href="{% url 'equipment_photos' %}"
-                                class="ml-[22px] flex items-center space-x-2 px-2 py-1.5 rounded-md transition-all relative z-10 w-[calc(100%-24px)] text-gray-500 dark:text-gray-400 hover:text-preh-petrol dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800">
-                                <span
-                                    class="flex items-center justify-center min-w-[20px] h-4 rounded text-[9px] font-bold transition-colors flex-shrink-0 bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
-                                    1.2
-                                </span>
-                                <span class="truncate text-xs">Equipment Photos</span>
-                            </a>
-                        </div>
                     </div>
                 </div>
 
@@ -354,7 +339,8 @@
         <!-- Top Header -->
         <header
             class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center justify-between px-8 shadow-sm flex-shrink-0 transition-colors duration-200">
-            <h1 class="text-xl font-semibold text-preh-petrol dark:text-preh-light-blue">{{ page_title|default:"Dashboard" }}</h1>
+            <h1 class="text-xl font-semibold text-preh-petrol dark:text-preh-light-blue">{{
+                page_title|default:"Dashboard" }}</h1>
             <div class="flex items-center space-x-4">
                 <div
                     class="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-3 py-1 rounded-full border border-gray-100 dark:border-gray-600">

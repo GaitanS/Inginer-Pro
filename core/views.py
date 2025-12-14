@@ -236,7 +236,7 @@ def equipment_update(request, equipment_id):
     field = request.POST.get('field')
     value = request.POST.get('value', '')
     
-    allowed_fields = ['station', 'owner', 'eq_number', 'power_supply', 'power_kw', 'air_supply_bar', 'air_supply_diam']
+    allowed_fields = ['station', 'owner', 'eq_number', 'power_supply', 'power_kw', 'air_supply_bar', 'air_supply_diam', 'height', 'width', 'length', 'weight', 'photo_front', 'photo_tag']
     
     if field in allowed_fields:
         setattr(equipment, field, value)

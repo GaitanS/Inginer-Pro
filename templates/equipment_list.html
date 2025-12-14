@@ -6,7 +6,6 @@
         <div class="flex items-center gap-2">
             <a href="{% url 'equipment' %}" class="px-4 py-1.5 bg-preh-petrol text-white rounded text-xs font-medium">List</a>
             <a href="{% url 'equipment_ips' %}" class="px-4 py-1.5 bg-gray-600 text-gray-300 rounded text-xs font-medium hover:bg-gray-500">IPs</a>
-            <a href="{% url 'equipment_photos' %}" class="px-4 py-1.5 bg-gray-600 text-gray-300 rounded text-xs font-medium hover:bg-gray-500">Photos</a>
             <button id="add-row-btn" hx-post="{% url 'equipment_add' %}" hx-target="#equipment-tbody" hx-swap="beforeend" class="flex items-center gap-1 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-medium transition-colors ml-2"><i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Row</button>
         </div>
     </div>
@@ -23,6 +22,12 @@
                     <th class="p-3 border-b border-gray-700 min-w-[100px] border-r border-gray-700 uppercase text-xs">Power/KW</th>
                     <th class="p-3 border-b border-gray-700 min-w-[120px] border-r border-gray-700 uppercase text-xs">Air Supply x bar</th>
                     <th class="p-3 border-b border-gray-700 min-w-[180px] border-r border-gray-700 uppercase text-xs">Air Supply tub di [mm]</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[100px] border-r border-gray-700 uppercase text-xs">Inaltime [mm]</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[100px] border-r border-gray-700 uppercase text-xs">Latime [mm]</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[100px] border-r border-gray-700 uppercase text-xs">Lungime [mm]</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[100px] border-r border-gray-700 uppercase text-xs">Greutate [kg]</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[150px] border-r border-gray-700 uppercase text-xs">Photo Front</th>
+                    <th class="p-3 border-b border-gray-700 min-w-[150px] uppercase text-xs">Photo Tag</th>
                 </tr>
             </thead>
             <tbody id="equipment-tbody" class="divide-y divide-gray-700">
@@ -37,9 +42,15 @@
                     <td class="p-0 border-r border-gray-700"><select class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none appearance-none" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "power_kw"}' hx-swap="none" name="value"><option value="" class="bg-gray-800">-</option><option value="1" class="bg-gray-800" {% if equip.power_kw == '1' %}selected{% endif %}>1</option><option value="1.5" class="bg-gray-800" {% if equip.power_kw == '1.5' %}selected{% endif %}>1.5</option><option value="2" class="bg-gray-800" {% if equip.power_kw == '2' %}selected{% endif %}>2</option><option value="2.5" class="bg-gray-800" {% if equip.power_kw == '2.5' %}selected{% endif %}>2.5</option><option value="3" class="bg-gray-800" {% if equip.power_kw == '3' %}selected{% endif %}>3</option></select></td>
                     <td class="p-0 border-r border-gray-700"><select class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none appearance-none" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "air_supply_bar"}' hx-swap="none" name="value"><option value="" class="bg-gray-800">-</option><option value="no" class="bg-gray-800" {% if equip.air_supply_bar == 'no' %}selected{% endif %}>no</option><option value="6" class="bg-gray-800" {% if equip.air_supply_bar == '6' %}selected{% endif %}>6</option><option value="8" class="bg-gray-800" {% if equip.air_supply_bar == '8' %}selected{% endif %}>8</option></select></td>
                     <td class="p-0 border-r border-gray-700"><select class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none appearance-none" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "air_supply_diam"}' hx-swap="none" name="value"><option value="" class="bg-gray-800">-</option><option value="no" class="bg-gray-800" {% if equip.air_supply_diam == 'no' %}selected{% endif %}>no</option><option value="12" class="bg-gray-800" {% if equip.air_supply_diam == '12' %}selected{% endif %}>12</option><option value="16" class="bg-gray-800" {% if equip.air_supply_diam == '16' %}selected{% endif %}>16</option></select></td>
+                    <td class="p-0 border-r border-gray-700"><input class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none" type="text" value="{{ equip.height }}" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "height"}' hx-swap="none" name="value"></td>
+                    <td class="p-0 border-r border-gray-700"><input class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none" type="text" value="{{ equip.width }}" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "width"}' hx-swap="none" name="value"></td>
+                    <td class="p-0 border-r border-gray-700"><input class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none" type="text" value="{{ equip.length }}" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "length"}' hx-swap="none" name="value"></td>
+                    <td class="p-0 border-r border-gray-700"><input class="w-full h-full p-3 bg-transparent text-white focus:bg-gray-700 focus:outline-none" type="text" value="{{ equip.weight }}" hx-post="{% url 'equipment_update' equip.id %}" hx-trigger="change" hx-vals='{"field": "weight"}' hx-swap="none" name="value"></td>
+                    <td class="p-2 border-r border-gray-700"><div id="photo-front-{{ equip.id }}" class="border border-dashed border-gray-600 rounded p-1 h-16 flex items-center justify-center cursor-pointer hover:border-gray-500 hover:bg-gray-800/30 transition-colors" onclick="document.getElementById('upload-front-{{ equip.id }}').click()">{% if equip.photo_front %}<img src="{{ equip.photo_front }}" alt="Front" class="max-h-14 object-contain">{% else %}<i data-lucide="image" class="w-5 h-5 text-gray-500"></i>{% endif %}</div><input type="file" id="upload-front-{{ equip.id }}" class="hidden" accept="image/*" onchange="uploadPhoto({{ equip.id }}, 'photo_front', this.files[0])"></td>
+                    <td class="p-2"><div id="photo-tag-{{ equip.id }}" class="border border-dashed border-gray-600 rounded p-1 h-16 flex items-center justify-center cursor-pointer hover:border-gray-500 hover:bg-gray-800/30 transition-colors" onclick="document.getElementById('upload-tag-{{ equip.id }}').click()">{% if equip.photo_tag %}<img src="{{ equip.photo_tag }}" alt="Tag" class="max-h-14 object-contain">{% else %}<i data-lucide="image" class="w-5 h-5 text-gray-500"></i>{% endif %}</div><input type="file" id="upload-tag-{{ equip.id }}" class="hidden" accept="image/*" onchange="uploadPhoto({{ equip.id }}, 'photo_tag', this.files[0])"></td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="9" class="p-8 text-center text-gray-400">No equipment found. Click "+ Add Row" to add equipment.</td></tr>
+                <tr><td colspan="15" class="p-8 text-center text-gray-400">No equipment found. Click "+ Add Row" to add equipment.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -56,12 +67,29 @@
     </div>
 </div>
 <script>
-let deleteEquipmentId = null;
-function confirmDelete(id, stationName) { deleteEquipmentId = id; document.getElementById('delete-modal').classList.remove('hidden'); }
-function closeDeleteModal() { document.getElementById('delete-modal').classList.add('hidden'); deleteEquipmentId = null; }
-document.getElementById('confirm-delete-btn').addEventListener('click', function() { if (deleteEquipmentId) { htmx.ajax('POST', '/equipment/delete/' + deleteEquipmentId + '/', {target: '#equipment-row-' + deleteEquipmentId, swap: 'outerHTML'}); closeDeleteModal(); } });
-document.getElementById('delete-modal').addEventListener('click', function(e) { if (e.target === this) closeDeleteModal(); });
-document.body.addEventListener('htmx:afterSwap', function() { if (typeof lucide !== 'undefined') lucide.createIcons(); });
+    let deleteEquipmentId = null;
+    function confirmDelete(id, stationName) { deleteEquipmentId = id; document.getElementById('delete-modal').classList.remove('hidden'); }
+    function closeDeleteModal() { document.getElementById('delete-modal').classList.add('hidden'); deleteEquipmentId = null; }
+    document.getElementById('confirm-delete-btn').addEventListener('click', function () { if (deleteEquipmentId) { htmx.ajax('POST', '/equipment/delete/' + deleteEquipmentId + '/', { target: '#equipment-row-' + deleteEquipmentId, swap: 'outerHTML' }); closeDeleteModal(); } });
+    document.getElementById('delete-modal').addEventListener('click', function (e) { if (e.target === this) closeDeleteModal(); });
+    document.body.addEventListener('htmx:afterSwap', function () { if (typeof lucide !== 'undefined') lucide.createIcons(); });
+    function uploadPhoto(equipId, field, file) {
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var targetId = field === 'photo_front' ? 'photo-front-' + equipId : 'photo-tag-' + equipId;
+            var container = document.getElementById(targetId);
+            container.innerHTML = '<img src="' + e.target.result + '" alt="Photo" class="max-h-14 object-contain">';
+            var formData = new FormData();
+            formData.append('field', field);
+            formData.append('value', e.target.result.substring(0, 200));
+            fetch('/equipment/update/' + equipId + '/', {
+                method: 'POST',
+                headers: {'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
+                body: formData
+            });
+        };
+        reader.readAsDataURL(file);
+    }
 </script>
 {% endblock %}
-

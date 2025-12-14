@@ -15,6 +15,11 @@ class Equipment(models.Model):
     power_kw = models.CharField(max_length=20, blank=True)
     air_supply_bar = models.CharField(max_length=20, default='no')
     air_supply_diam = models.CharField(max_length=20, default='no')
+    # Dimensions and Weight
+    height = models.CharField(max_length=50, blank=True, verbose_name="Inaltime [mm]")
+    width = models.CharField(max_length=50, blank=True, verbose_name="Latime [mm]")
+    length = models.CharField(max_length=50, blank=True, verbose_name="Lungime [mm]")
+    weight = models.CharField(max_length=50, blank=True, verbose_name="Greutate [kg]")
     # Photo fields
     photo_front = models.URLField(blank=True, verbose_name="Front Photo URL")
     photo_tag = models.URLField(blank=True, verbose_name="Tag Photo URL")
