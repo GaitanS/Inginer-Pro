@@ -3,6 +3,9 @@ from . import views
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
+    path('project-team/', views.project_team, name='project_team'),
+    path('project-team/pdf/', views.project_team_pdf_download, name='project_team_pdf_download'),
+    path('project-team/upload/', views.project_team_upload, name='project_team_upload'),
     
     # Equipment views
     path('equipment/', views.equipment, name='equipment'),

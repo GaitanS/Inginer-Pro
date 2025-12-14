@@ -141,8 +141,8 @@
                     <span>Task Prioritization</span>
                 </a>
 
-                <a href="#"
-                    class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-md mb-1 transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-preh-petrol dark:hover:text-white">
+                <a href="{% url 'project_team' %}"
+                    class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-md mb-1 transition-all duration-200 {% if active_view == 'project_team' %}bg-preh-petrol text-white shadow-md{% else %}text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-preh-petrol dark:hover:text-white{% endif %}">
                     <i data-lucide="users" class="w-[18px] h-[18px]"></i>
                     <span class="font-medium">Project Team</span>
                 </a>
@@ -339,8 +339,7 @@
         <!-- Top Header -->
         <header
             class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center justify-between px-8 shadow-sm flex-shrink-0 transition-colors duration-200">
-            <h1 class="text-xl font-semibold text-preh-petrol dark:text-preh-light-blue">{{
-                page_title|default:"Dashboard" }}</h1>
+            <h1 class="text-xl font-semibold text-preh-petrol dark:text-preh-light-blue">{{ page_title|default:"Dashboard" }}</h1>
             <div class="flex items-center space-x-4">
                 <div
                     class="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-3 py-1 rounded-full border border-gray-100 dark:border-gray-600">

@@ -49,7 +49,7 @@
                         <th class="p-3 border-b dark:border-gray-700 w-16 text-center">Cant.</th>
                         {% for variant in variants %}
                         <th class="p-2 border-b dark:border-gray-700 min-w-[100px] text-center text-xs relative group"
-                            style="background-color: {{ variant.color }};">
+                            style="background-color: {{ variant.color }}; color: {{ variant.color|contrast_color }};">
                             <div class="flex flex-col items-center">
                                 <input type="color" value="{{ variant.color }}"
                                     hx-post="/bom/variant/color/{{ variant.id }}/" hx-trigger="change" name="color"
@@ -111,7 +111,8 @@
                             hx-target="#bom-row-{{ data.item.id }}">
                             <div class="flex items-center justify-center h-full">
                                 {% if data.variant_status|get_item:variant.id %}
-                                <span class="font-bold text-lg select-none">X</span>
+                                <span class="font-bold text-lg select-none"
+                                    style="color: {{ variant.color|contrast_color }}">X</span>
                                 {% endif %}
                             </div>
                         </td>

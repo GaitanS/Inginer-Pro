@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="animate-fade-in space-y-6">
+    {% if pdf_exists %}
+    <!-- PDF Viewer -->
+    <div class="bg-gray-700 border border-gray-600 rounded-xl shadow-lg overflow-hidden"
+        style="height: calc(100vh - 200px);">
+        <div class="flex items-center justify-between p-4 bg-gray-800 border-b border-gray-600">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <i data-lucide="file-text" class="w-5 h-5 text-preh-light-blue"></i>
+                Project Team List
+            </h3>
+            <div class="flex items-center gap-3">
+                <form id="replace-pdf-form" action="{% url 'project_team_upload' %}" method="post"
+                    enctype="multipart/form-data" class="flex items-center gap-2">
+                    {% csrf_token %}
+                    <input type="file" id="replace-pdf-input" name="pdf_file" accept=".pdf" class="hidden"
+                        onchange="document.getElementById('replace-pdf-form').submit()">
+                    <button type="button" onclick="document.getElementById('replace-pdf-input').click()"
+                        class="flex items-center gap-2 px-3 py-1.5 bg-gray-600 text-white rounded text-xs font-medium hover:bg-gray-500 transition-colors">
+                        <i data-lucide="upload" class="w-4 h-4"></i>
+                        Replace PDF
+                    </button>
+                </form>
+                <a href="{% url 'project_team_pdf_download' %}"
+                    class="flex items-center gap-2 px-3 py-1.5 bg-preh-petrol text-white rounded text-xs font-medium hover:bg-preh-petrol/80 transition-colors">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    Download PDF
+                </a>
+            </div>
+        </div>
+        <iframe src="{% url 'project_team_pdf_download' %}" class="w-full h-full border-0"
+            style="min-height: 600px;"></iframe>
+    </div>
+    {% else %}
+    <!-- Upload Form -->
+    <div class="bg-gray-700 border border-gray-600 rounded-xl p-8 shadow-lg">
+        <div class="max-w-xl mx-auto">
+            <div class="flex items-center justify-center mb-6">
+                <div class="p-4 bg-preh-petrol/20 rounded-full">
+                    <i data-lucide="users" class="w-12 h-12 text-preh-light-blue"></i>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold text-white text-center mb-2">Project Team Document</h2>
+            <p class="text-gray-400 text-center mb-8">Upload your Project Team List PDF document to view it here.</p>
+
+            <form action="{% url 'project_team_upload' %}" method="post" enctype="multipart/form-data" id="upload-form">
+                {% csrf_token %}
+                <div class="border-2 border-dashed border-gray-500 rounded-xl p-8 text-center hover:border-preh-petrol transition-colors cursor-pointer"
+                    onclick="document.getElementById('pdf-input').click()">
+                    <input type="file" id="pdf-input" name="pdf_file" accept=".pdf" class="hidden"
+                        onchange="handleFileSelect(this)">
+                    <div id="upload-placeholder">
+                        <i data-lucide="upload-cloud" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
+                        <p class="text-lg text-white font-medium mb-2">Click to select PDF file</p>
+                        <p class="text-sm text-gray-400">or drag and drop your file here</p>
+                    </div>
+                    <div id="file-selected" class="hidden">
+                        <i data-lucide="file-check" class="w-16 h-16 text-green-500 mx-auto mb-4"></i>
+                        <p class="text-lg text-white font-medium mb-2" id="selected-filename">File selected</p>
+                        <p class="text-sm text-gray-400">Click "Upload" to continue</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mt-6">
+                    <button type="submit" id="upload-btn" disabled
+                        class="flex items-center gap-2 px-6 py-3 bg-preh-petrol text-white rounded-lg font-medium hover:bg-preh-petrol/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i data-lucide="upload" class="w-5 h-5"></i>
+                        Upload Document
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function handleFileSelect(input) {
+        if (input.files && input.files[0]) {
+            document.getElementById('upload-placeholder').classList.add('hidden');
+            document.getElementById('file-selected').classList.remove('hidden');
+            document.getElementById('selected-filename').textContent = input.files[0].name;
+            document.getElementById('upload-btn').disabled = false;
+            lucide.createIcons();
+        }
+    }
+</script>
+{% endblock %}

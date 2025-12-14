@@ -1,11 +1,63 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse, Http404
 from django.views.decorators.http import require_POST
+from django.conf import settings
+import os
 from .models import (
     Equipment, ValidationCategory, ValidationChecklistItem, ValidationResult, 
     EquipmentDevice, DocumentationCategory, DocumentationChecklistItem, DocumentationResult,
     Variant, BomItem, BomItemVariant, DocHistoryItem
 )
+
+# Project Team PDF path - update this to your actual PDF location
+PROJECT_TEAM_PDF_DIR = os.path.join(settings.BASE_DIR, 'static', 'documents')
+PROJECT_TEAM_PDF_PATH = os.path.join(PROJECT_TEAM_PDF_DIR, 'ProjectTeamList.pdf')
+
+
+def project_team(request):
+    """Project Team page view - shows PDF viewer or setup instructions."""
+    pdf_exists = os.path.exists(PROJECT_TEAM_PDF_PATH)
+    pdf_configured = os.path.exists(PROJECT_TEAM_PDF_DIR)
+    
+    context = {
+        'active_view': 'project_team',
+        'page_title': 'Project Team',
+        'pdf_exists': pdf_exists,
+        'pdf_configured': pdf_configured,
+        'pdf_directory': PROJECT_TEAM_PDF_DIR,
+    }
+    return render(request, 'project_team.html', context)
+
+
+from django.views.decorators.clickjacking import xframe_options_exempt
+
+@xframe_options_exempt
+def project_team_pdf_download(request):
+    """Serve the Project Team PDF file for embedding/download."""
+    if os.path.exists(PROJECT_TEAM_PDF_PATH):
+        response = FileResponse(open(PROJECT_TEAM_PDF_PATH, 'rb'), content_type='application/pdf')
+        return response
+    else:
+        return HttpResponse("PDF not found", status=404)
+
+
+@require_POST
+def project_team_upload(request):
+    """Handle PDF file upload for Project Team."""
+    from django.shortcuts import redirect
+    
+    if 'pdf_file' in request.FILES:
+        pdf_file = request.FILES['pdf_file']
+        
+        # Ensure directory exists
+        os.makedirs(PROJECT_TEAM_PDF_DIR, exist_ok=True)
+        
+        # Save the file
+        with open(PROJECT_TEAM_PDF_PATH, 'wb+') as destination:
+            for chunk in pdf_file.chunks():
+                destination.write(chunk)
+    
+    return redirect('project_team')
 
 
 def dashboard(request):
@@ -568,8 +620,35 @@ def bom(request):
     """BOM main view with editable table and variant columns."""
     active_tab = request.GET.get('tab', 'bom')
     variants = Variant.objects.all()
-    bom_items = BomItem.objects.prefetch_related('item_variants__variant').all()
     history_items = DocHistoryItem.objects.all()
+    
+    # Sync BOM items with Equipment stations
+    equipment_stations = set(Equipment.objects.values_list('station', flat=True).distinct())
+    
+    # Delete BOM items that don't have matching equipment stations
+    BomItem.objects.exclude(station__in=equipment_stations).delete()
+    
+    existing_bom_stations = set(BomItem.objects.values_list('station', flat=True))
+    
+    # Auto-create BOM rows for equipment stations that don't have BOM entries
+    max_order = BomItem.objects.order_by('-order').values_list('order', flat=True).first() or 0
+    new_order = max_order + 1
+    
+    for station in equipment_stations:
+        if station and station not in existing_bom_stations:
+            new_item = BomItem.objects.create(
+                station=station,
+                part_number='',
+                description='',
+                quantity=1,
+                order=new_order
+            )
+            new_order += 1
+            # Create variant entries for this item
+            for variant in variants:
+                BomItemVariant.objects.create(bom_item=new_item, variant=variant, is_applicable=False)
+    
+    bom_items = BomItem.objects.prefetch_related('item_variants__variant').order_by('station', 'order')
     
     # Build variant matrix for each BOM item
     bom_data = []
