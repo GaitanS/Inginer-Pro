@@ -34,44 +34,164 @@
             style="min-height: 600px;"></iframe>
     </div>
     {% else %}
-    <!-- Upload Form -->
-    <div class="bg-gray-700 border border-gray-600 rounded-xl p-8 shadow-lg">
-        <div class="max-w-xl mx-auto">
-            <div class="flex items-center justify-center mb-6">
-                <div class="p-4 bg-preh-petrol/20 rounded-full">
-                    <i data-lucide="users" class="w-12 h-12 text-preh-light-blue"></i>
+    <!-- Guidelines & Upload Form -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Guidelines Section -->
+        <div class="bg-gray-700 border border-gray-600 rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gray-800 p-4 border-b border-gray-600">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i data-lucide="book-open" class="w-5 h-5 text-preh-light-blue"></i>
+                    Ghid Project Team
+                </h2>
+                <p class="text-sm text-gray-400 mt-1">Pentru ingineri juniori și seniori</p>
+            </div>
+            <div class="p-5 space-y-4 max-h-[600px] overflow-y-auto">
+                <!-- What is Project Team -->
+                <div class="bg-gray-800/50 rounded-lg p-4">
+                    <h3 class="font-bold text-white mb-2 flex items-center gap-2">
+                        <i data-lucide="info" class="w-4 h-4 text-blue-400"></i>
+                        Ce este documentul Project Team?
+                    </h3>
+                    <p class="text-sm text-gray-300">Documentul Project Team conține lista completă a membrilor echipei
+                        de proiect, organizată pe roluri și departamente. Este esențial pentru comunicare și colaborare
+                        în cadrul proiectului.</p>
+                </div>
+
+                <!-- Structure -->
+                <div class="bg-gray-800/50 rounded-lg p-4">
+                    <h3 class="font-bold text-white mb-3 flex items-center gap-2">
+                        <i data-lucide="layers" class="w-4 h-4 text-green-400"></i>
+                        Structura Documentului
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="border-l-2 border-blue-500 pl-3">
+                            <span class="font-semibold text-blue-400">Customer</span>
+                            <p class="text-gray-400">Group Leader, Buyer, Project Manager de la client</p>
+                        </div>
+                        <div class="border-l-2 border-green-500 pl-3">
+                            <span class="font-semibold text-green-400">Core Team</span>
+                            <p class="text-gray-400">Account Manager, Lead Production Engineer, Lead Project Purchaser,
+                                Series Project Manager, System Project Manager</p>
+                        </div>
+                        <div class="border-l-2 border-yellow-500 pl-3">
+                            <span class="font-semibold text-yellow-400">Core Team Plant</span>
+                            <p class="text-gray-400">Assembly Engineers, FMEA Moderators, Logistician, Quality
+                                Engineers, Test Engineers</p>
+                        </div>
+                        <div class="border-l-2 border-purple-500 pl-3">
+                            <span class="font-semibold text-purple-400">Project Management</span>
+                            <p class="text-gray-400">Project Manager principal</p>
+                        </div>
+                        <div class="border-l-2 border-red-500 pl-3">
+                            <span class="font-semibold text-red-400">Hardware Development</span>
+                            <p class="text-gray-400">Hardware Project Managers, Hardware Architects, HW QA Engineers</p>
+                        </div>
+                        <div class="border-l-2 border-cyan-500 pl-3">
+                            <span class="font-semibold text-cyan-400">Software</span>
+                            <p class="text-gray-400">Software Project Manager, SW Architect, SW Configuration Manager,
+                                SW Integrator</p>
+                        </div>
+                        <div class="border-l-2 border-orange-500 pl-3">
+                            <span class="font-semibold text-orange-400">Software Development</span>
+                            <p class="text-gray-400">SW Integration Tester, SW Test Planner, SW QA Engineer</p>
+                        </div>
+                        <div class="border-l-2 border-pink-500 pl-3">
+                            <span class="font-semibold text-pink-400">Mechanical Design</span>
+                            <p class="text-gray-400">Tool Engineer, MD Design Engineers</p>
+                        </div>
+                        <div class="border-l-2 border-teal-500 pl-3">
+                            <span class="font-semibold text-teal-400">Quality Management</span>
+                            <p class="text-gray-400">Advanced Quality Planners, General Quality Manager, Project Risk
+                                Assessor, Quality Gate Assessor</p>
+                        </div>
+                        <div class="border-l-2 border-indigo-500 pl-3">
+                            <span class="font-semibold text-indigo-400">Supplier Management</span>
+                            <p class="text-gray-400">Supplier Quality Manager</p>
+                        </div>
+                        <div class="border-l-2 border-gray-400 pl-3">
+                            <span class="font-semibold text-gray-300">Process Management</span>
+                            <p class="text-gray-400">Process Managers pentru diferite domenii</p>
+                        </div>
+                        <div class="border-l-2 border-red-400 pl-3">
+                            <span class="font-semibold text-red-300">Cybersecurity</span>
+                            <p class="text-gray-400">Cybersecurity Incident Manager</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info for each member -->
+                <div class="bg-gray-800/50 rounded-lg p-4">
+                    <h3 class="font-bold text-white mb-2 flex items-center gap-2">
+                        <i data-lucide="user" class="w-4 h-4 text-purple-400"></i>
+                        Informații pentru fiecare membru
+                    </h3>
+                    <ul class="text-sm text-gray-300 space-y-1 list-disc list-inside">
+                        <li><strong>Rol</strong> - poziția în echipa de proiect</li>
+                        <li><strong>Nume</strong> - numele complet al persoanei</li>
+                        <li><strong>CC No.</strong> - Cost Center Number</li>
+                        <li><strong>Telefon</strong> - numărul de contact</li>
+                        <li><strong>Email</strong> - adresa de email corporativă</li>
+                    </ul>
+                </div>
+
+                <!-- Tips -->
+                <div class="bg-blue-900/30 border border-blue-700/50 rounded-lg p-4">
+                    <h3 class="font-bold text-blue-300 mb-2 flex items-center gap-2">
+                        <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                        Sfaturi
+                    </h3>
+                    <ul class="text-sm text-blue-200 space-y-1 list-disc list-inside">
+                        <li>Consultă documentul la începutul proiectului pentru a cunoaște echipa</li>
+                        <li>Verifică rolurile pentru a ști cui să te adresezi pentru fiecare problemă</li>
+                        <li>Documentul se actualizează pe parcursul proiectului</li>
+                        <li>Link-urile de descriere a rolurilor se găsesc la: <code
+                                class="bg-gray-700 px-1 rounded">stages.prehgad.local</code></li>
+                    </ul>
                 </div>
             </div>
+        </div>
 
-            <h2 class="text-2xl font-bold text-white text-center mb-2">Project Team Document</h2>
-            <p class="text-gray-400 text-center mb-8">Upload your Project Team List PDF document to view it here.</p>
-
-            <form action="{% url 'project_team_upload' %}" method="post" enctype="multipart/form-data" id="upload-form">
-                {% csrf_token %}
-                <div class="border-2 border-dashed border-gray-500 rounded-xl p-8 text-center hover:border-preh-petrol transition-colors cursor-pointer"
-                    onclick="document.getElementById('pdf-input').click()">
-                    <input type="file" id="pdf-input" name="pdf_file" accept=".pdf" class="hidden"
-                        onchange="handleFileSelect(this)">
-                    <div id="upload-placeholder">
-                        <i data-lucide="upload-cloud" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
-                        <p class="text-lg text-white font-medium mb-2">Click to select PDF file</p>
-                        <p class="text-sm text-gray-400">or drag and drop your file here</p>
-                    </div>
-                    <div id="file-selected" class="hidden">
-                        <i data-lucide="file-check" class="w-16 h-16 text-green-500 mx-auto mb-4"></i>
-                        <p class="text-lg text-white font-medium mb-2" id="selected-filename">File selected</p>
-                        <p class="text-sm text-gray-400">Click "Upload" to continue</p>
+        <!-- Upload Form -->
+        <div class="bg-gray-700 border border-gray-600 rounded-xl p-8 shadow-lg flex flex-col justify-center">
+            <div class="max-w-md mx-auto w-full">
+                <div class="flex items-center justify-center mb-6">
+                    <div class="p-4 bg-preh-petrol/20 rounded-full">
+                        <i data-lucide="users" class="w-12 h-12 text-preh-light-blue"></i>
                     </div>
                 </div>
 
-                <div class="flex justify-center mt-6">
-                    <button type="submit" id="upload-btn" disabled
-                        class="flex items-center gap-2 px-6 py-3 bg-preh-petrol text-white rounded-lg font-medium hover:bg-preh-petrol/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                        <i data-lucide="upload" class="w-5 h-5"></i>
-                        Upload Document
-                    </button>
-                </div>
-            </form>
+                <h2 class="text-xl font-bold text-white text-center mb-2">Încarcă Documentul Project Team</h2>
+                <p class="text-gray-400 text-center mb-6 text-sm">Încarcă fișierul PDF al echipei de proiect pentru a-l
+                    vizualiza aici.</p>
+
+                <form action="{% url 'project_team_upload' %}" method="post" enctype="multipart/form-data"
+                    id="upload-form">
+                    {% csrf_token %}
+                    <div class="border-2 border-dashed border-gray-500 rounded-xl p-6 text-center hover:border-preh-petrol transition-colors cursor-pointer"
+                        onclick="document.getElementById('pdf-input').click()">
+                        <input type="file" id="pdf-input" name="pdf_file" accept=".pdf" class="hidden"
+                            onchange="handleFileSelect(this)">
+                        <div id="upload-placeholder">
+                            <i data-lucide="upload-cloud" class="w-12 h-12 text-gray-400 mx-auto mb-3"></i>
+                            <p class="text-white font-medium mb-1">Click pentru a selecta PDF</p>
+                            <p class="text-xs text-gray-400">sau drag and drop</p>
+                        </div>
+                        <div id="file-selected" class="hidden">
+                            <i data-lucide="file-check" class="w-12 h-12 text-green-500 mx-auto mb-3"></i>
+                            <p class="text-white font-medium mb-1" id="selected-filename">Fișier selectat</p>
+                            <p class="text-xs text-gray-400">Click "Încarcă" pentru a continua</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center mt-4">
+                        <button type="submit" id="upload-btn" disabled
+                            class="flex items-center gap-2 px-5 py-2.5 bg-preh-petrol text-white rounded-lg font-medium hover:bg-preh-petrol/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i data-lucide="upload" class="w-4 h-4"></i>
+                            Încarcă Document
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     {% endif %}

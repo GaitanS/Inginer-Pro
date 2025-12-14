@@ -40,6 +40,7 @@ urlpatterns = [
     path('bom/toggle/<int:item_id>/<int:variant_id>/', views.bom_toggle_variant, name='bom_toggle_variant'),
     path('bom/variant/add/', views.bom_add_variant, name='bom_add_variant'),
     path('bom/variant/color/<int:variant_id>/', views.bom_update_variant_color, name='bom_update_variant_color'),
+    path('bom/variant/delete/<int:variant_id>/', views.bom_delete_variant, name='bom_delete_variant'),
     
     # Visual Aids views
     path('visual-aids/', views.visual_aids, name='visual_aids'),

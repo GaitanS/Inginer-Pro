@@ -1,0 +1,48 @@
+{% load validation_extras %}
+<tr id="bom-row-{{ data.item.id }}"
+    class="group hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors {% if forloop.counter|divisibleby:2 %}bg-gray-50 dark:bg-gray-800{% else %}bg-white dark:bg-gray-900{% endif %}">
+    <!-- Delete button (first column) -->
+    <td class="p-1 text-center bg-gray-100 dark:bg-gray-800 sticky left-0 z-10">
+        <button hx-post="/bom/delete/{{ data.item.id }}/" hx-confirm="Ștergeți acest rând?"
+            hx-target="#bom-row-{{ data.item.id }}" hx-swap="outerHTML"
+            class="text-red-400 hover:text-red-600 transition-colors p-1" title="Șterge rândul">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+        </button>
+    </td>
+    <!-- Station dropdown -->
+    <td class="p-1 border-r dark:border-gray-700">
+        <select name="station" hx-post="/bom/update/{{ data.item.id }}/" hx-trigger="change" hx-swap="none"
+            class="w-full bg-transparent p-2 focus:outline-none dark:text-white dark:bg-gray-800 font-medium cursor-pointer">
+            <option value="">-- Selectează --</option>
+            {% for station in equipment_stations %}
+            <option value="{{ station }}" {% if data.item.station == station %}selected{% endif %}>{{ station }}</option>
+            {% endfor %}
+        </select>
+    </td>
+    <td class="p-1 border-r dark:border-gray-700">
+        <input value="{{ data.item.part_number }}" name="part_number" hx-post="/bom/update/{{ data.item.id }}/"
+            hx-trigger="blur changed" hx-swap="none"
+            class="w-full bg-transparent p-2 focus:outline-none dark:text-white font-mono" />
+    </td>
+    <td class="p-1 border-r dark:border-gray-700">
+        <input value="{{ data.item.description }}" name="description" hx-post="/bom/update/{{ data.item.id }}/"
+            hx-trigger="blur changed" hx-swap="none"
+            class="w-full bg-transparent p-2 focus:outline-none dark:text-white" />
+    </td>
+    <td class="p-1 border-r dark:border-gray-700">
+        <input type="number" value="{{ data.item.quantity }}" name="quantity" hx-post="/bom/update/{{ data.item.id }}/"
+            hx-trigger="blur changed" hx-swap="none"
+            class="w-full bg-transparent p-2 text-center focus:outline-none dark:text-white" />
+    </td>
+    {% for variant in variants %}
+    <td class="p-1 text-center cursor-pointer border-r border-gray-200 dark:border-gray-700"
+        style="background-color: {{ variant.color }}" hx-post="/bom/toggle/{{ data.item.id }}/{{ variant.id }}/"
+        hx-swap="outerHTML" hx-target="#bom-row-{{ data.item.id }}">
+        <div class="flex items-center justify-center h-full">
+            {% if data.variant_status|get_item:variant.id %}
+            <span class="font-bold text-lg select-none" style="color: {{ variant.color|contrast_color }}">X</span>
+            {% endif %}
+        </div>
+    </td>
+    {% endfor %}
+</tr>

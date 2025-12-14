@@ -666,6 +666,7 @@ def bom(request):
         'variants': variants,
         'bom_data': bom_data,
         'history_items': history_items,
+        'equipment_stations': sorted(equipment_stations),
         'get_contrast_color': get_contrast_color,
     }
     return render(request, 'bom.html', context)
@@ -690,11 +691,24 @@ def bom_add_row(request):
     for variant in variants:
         BomItemVariant.objects.create(bom_item=new_item, variant=variant, is_applicable=False)
     
-    # Return HTML for the new row
-    item_variants = {iv.variant_id: iv.is_applicable for iv in new_item.item_variants.all()}
+    # Prepare context for the partial
+    equipment_stations = sorted(set(Equipment.objects.values_list('station', flat=True).distinct()))
     
-    html = render_bom_row(new_item, variants, item_variants)
-    return HttpResponse(html)
+    # Build data object exactly as in the main view
+    item_variants = {iv.variant_id: iv.is_applicable for iv in new_item.item_variants.all()}
+    data = {
+        'item': new_item,
+        'variant_status': {v.id: item_variants.get(v.id, False) for v in variants}
+    }
+    
+    context = {
+        'data': data,
+        'equipment_stations': equipment_stations,
+        'variants': variants,
+        'get_contrast_color': get_contrast_color,
+    }
+    
+    return render(request, 'partials/bom_row.html', context)
 
 
 def render_bom_row(item, variants, item_variants):
@@ -802,11 +816,8 @@ def bom_toggle_variant(request, item_id, variant_id):
         biv.is_applicable = not biv.is_applicable
         biv.save()
     
-    # Re-render the entire row
-    variants = Variant.objects.all()
-    item_variants = {iv.variant_id: iv.is_applicable for iv in item.item_variants.all()}
-    
-    return HttpResponse(render_bom_row(item, variants, item_variants))
+    # Redirect to refresh the page
+    return HttpResponse('', headers={'HX-Redirect': '/bom/'})
 
 
 @require_POST
@@ -819,10 +830,9 @@ def bom_add_variant(request):
     if Variant.objects.filter(name=name).exists():
         return HttpResponse('Variant already exists', status=400)
     
-    # Default colors cycle
-    colors = ['#bdd7ee', '#f8cbad', '#c6efce', '#ffeb9c', '#d9d9d9', '#ffd966']
+    # Get color from request or use default
+    color = request.POST.get('color', '#6BB8D4')
     max_order = Variant.objects.order_by('-order').values_list('order', flat=True).first() or 0
-    color = colors[max_order % len(colors)]
     
     variant = Variant.objects.create(name=name, color=color, order=max_order + 1)
     
@@ -841,6 +851,14 @@ def bom_update_variant_color(request, variant_id):
     color = request.POST.get('color', '#bdd7ee')
     variant.color = color
     variant.save()
+    return HttpResponse('', headers={'HX-Redirect': '/bom/'})
+
+
+@require_POST
+def bom_delete_variant(request, variant_id):
+    """HTMX: Delete a variant column."""
+    variant = get_object_or_404(Variant, pk=variant_id)
+    variant.delete()
     return HttpResponse('', headers={'HX-Redirect': '/bom/'})
 
 

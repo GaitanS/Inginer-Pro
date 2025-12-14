@@ -4,7 +4,7 @@
 
 {% block content %}
 <div
-    class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col h-[calc(100vh-180px)] overflow-hidden">
+    class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col h-[calc(100vh-180px)]">
     <!-- Tabs -->
     <div class="flex border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
         <a href="?tab=bom"
@@ -23,12 +23,24 @@
         <!-- Toolbar -->
         <div
             class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
-            <div class="flex gap-2">
+            <div class="flex gap-3 items-center">
                 <button hx-post="/bom/add/" hx-target="#bom-tbody" hx-swap="beforeend"
                     class="flex items-center gap-1 px-3 py-1.5 bg-preh-petrol text-white rounded hover:bg-preh-grey-blue text-xs font-medium transition-colors">
                     <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                     Adaugă Rând
                 </button>
+                <div class="flex items-center gap-2 border-l border-gray-300 dark:border-gray-600 pl-3">
+                    <input type="color" id="new-column-color" value="#6BB8D4"
+                        class="w-8 h-8 cursor-pointer rounded border border-gray-300 dark:border-gray-600"
+                        title="Alege culoare coloană" />
+                    <input type="text" id="new-column-name" placeholder="Nume coloană nouă"
+                        class="px-2 py-1.5 text-xs border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600 w-36" />
+                    <button onclick="addNewColumn()"
+                        class="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium transition-colors">
+                        <i data-lucide="columns" class="w-3.5 h-3.5"></i>
+                        Adaugă Coloană
+                    </button>
+                </div>
             </div>
             <div class="text-xs text-gray-500">
                 {{ bom_data|length }} articole
@@ -36,95 +48,44 @@
         </div>
 
         <!-- BOM Table -->
-        <div class="flex-1 overflow-auto">
-            <table class="w-full text-sm text-left border-collapse">
+        <div class="flex-1 overflow-x-auto overflow-y-auto">
+            <table class="min-w-full text-sm text-left border-collapse" style="min-width: 1200px;">
                 <thead
                     class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100 font-semibold sticky top-0 shadow-sm z-20">
                     <tr>
+                        <!-- Delete column header (first) -->
                         <th
-                            class="p-3 border-b dark:border-gray-700 min-w-[150px] sticky left-0 bg-gray-100 dark:bg-gray-800 z-10">
+                            class="p-2 border-b dark:border-gray-700 w-10 bg-gray-100 dark:bg-gray-800 text-center text-xs text-gray-500 sticky left-0 z-30">
+                            <i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i>
+                        </th>
+                        <th class="p-3 border-b dark:border-gray-700 min-w-[150px] bg-gray-100 dark:bg-gray-800">
                             Stație</th>
                         <th class="p-3 border-b dark:border-gray-700 min-w-[180px]">Material</th>
                         <th class="p-3 border-b dark:border-gray-700 min-w-[280px]">Descriere</th>
                         <th class="p-3 border-b dark:border-gray-700 w-16 text-center">Cant.</th>
                         {% for variant in variants %}
-                        <th class="p-2 border-b dark:border-gray-700 min-w-[100px] text-center text-xs relative group"
+                        <th class="p-2 border-b dark:border-gray-700 min-w-[100px] text-center text-xs relative"
                             style="background-color: {{ variant.color }}; color: {{ variant.color|contrast_color }};">
-                            <div class="flex flex-col items-center">
+                            <div class="flex items-center justify-between gap-1">
                                 <input type="color" value="{{ variant.color }}"
                                     hx-post="/bom/variant/color/{{ variant.id }}/" hx-trigger="change" name="color"
-                                    class="absolute top-1 right-1 w-4 h-4 opacity-0 group-hover:opacity-100 cursor-pointer" />
-                                <span class="truncate max-w-[90px] font-bold block w-full">{{ variant.name }}</span>
+                                    class="w-6 h-6 cursor-pointer rounded border border-white/30"
+                                    title="Schimbă culoarea" />
+                                <span class="truncate font-bold flex-1 text-center">{{ variant.name }}</span>
+                                <button hx-post="/bom/variant/delete/{{ variant.id }}/"
+                                    hx-confirm="Ștergeți varianta '{{ variant.name }}'?"
+                                    class="text-current opacity-60 hover:opacity-100 transition-opacity"
+                                    title="Șterge varianta">
+                                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                                </button>
                             </div>
                         </th>
                         {% endfor %}
-                        <!-- Add Variant Column -->
-                        <th class="p-3 border-b dark:border-gray-700 min-w-[120px] bg-gray-50 dark:bg-gray-800">
-                            <div id="add-variant-container">
-                                <button onclick="showAddVariant()" id="add-variant-btn"
-                                    class="flex items-center justify-center w-full h-full text-gray-400 hover:text-preh-petrol">
-                                    <i data-lucide="plus" class="w-4 h-4"></i>
-                                </button>
-                                <div id="add-variant-form" class="hidden flex items-center space-x-1">
-                                    <input id="new-variant-name"
-                                        class="w-full text-xs px-1 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                                        placeholder="Nume" />
-                                    <button onclick="submitAddVariant()" class="text-green-600 hover:text-green-800">
-                                        <i data-lucide="check" class="w-4 h-4"></i>
-                                    </button>
-                                    <button onclick="hideAddVariant()" class="text-red-600 hover:text-red-800">
-                                        <i data-lucide="x" class="w-4 h-4"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </th>
                     </tr>
                 </thead>
                 <tbody id="bom-tbody" class="divide-y divide-gray-100 dark:divide-gray-700">
                     {% for data in bom_data %}
-                    <tr id="bom-row-{{ data.item.id }}"
-                        class="group hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors {% if forloop.counter|divisibleby:2 %}bg-gray-50 dark:bg-gray-800{% else %}bg-white dark:bg-gray-900{% endif %}">
-                        <td class="p-1 sticky left-0 bg-inherit z-10 border-r dark:border-gray-700">
-                            <input value="{{ data.item.station }}" name="station"
-                                hx-post="/bom/update/{{ data.item.id }}/" hx-trigger="blur changed" hx-swap="none"
-                                class="w-full bg-transparent p-2 focus:outline-none dark:text-white font-medium" />
-                        </td>
-                        <td class="p-1 border-r dark:border-gray-700">
-                            <input value="{{ data.item.part_number }}" name="part_number"
-                                hx-post="/bom/update/{{ data.item.id }}/" hx-trigger="blur changed" hx-swap="none"
-                                class="w-full bg-transparent p-2 focus:outline-none dark:text-white font-mono" />
-                        </td>
-                        <td class="p-1 border-r dark:border-gray-700">
-                            <input value="{{ data.item.description }}" name="description"
-                                hx-post="/bom/update/{{ data.item.id }}/" hx-trigger="blur changed" hx-swap="none"
-                                class="w-full bg-transparent p-2 focus:outline-none dark:text-white" />
-                        </td>
-                        <td class="p-1 border-r dark:border-gray-700">
-                            <input type="number" value="{{ data.item.quantity }}" name="quantity"
-                                hx-post="/bom/update/{{ data.item.id }}/" hx-trigger="blur changed" hx-swap="none"
-                                class="w-full bg-transparent p-2 text-center focus:outline-none dark:text-white" />
-                        </td>
-                        {% for variant in variants %}
-                        <td class="p-1 text-center cursor-pointer border-r border-gray-200 dark:border-gray-700"
-                            style="background-color: {{ variant.color }}"
-                            hx-post="/bom/toggle/{{ data.item.id }}/{{ variant.id }}/" hx-swap="outerHTML"
-                            hx-target="#bom-row-{{ data.item.id }}">
-                            <div class="flex items-center justify-center h-full">
-                                {% if data.variant_status|get_item:variant.id %}
-                                <span class="font-bold text-lg select-none"
-                                    style="color: {{ variant.color|contrast_color }}">X</span>
-                                {% endif %}
-                            </div>
-                        </td>
-                        {% endfor %}
-                        <td class="p-1 text-center">
-                            <button hx-post="/bom/delete/{{ data.item.id }}/" hx-confirm="Ștergeți acest rând?"
-                                hx-target="#bom-row-{{ data.item.id }}" hx-swap="outerHTML"
-                                class="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
-                        </td>
-                    </tr>
+                    {% include "partials/bom_row.html" %}
                     {% empty %}
                     <tr>
                         <td colspan="100" class="p-8 text-center text-gray-400">
@@ -178,22 +139,24 @@
 </div>
 
 <script>
-    function showAddVariant() {
-        document.getElementById('add-variant-btn').classList.add('hidden');
-        document.getElementById('add-variant-form').classList.remove('hidden');
-        document.getElementById('new-variant-name').focus();
+    function addNewRow() {
+        fetch('/bom/add/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+            }
+        }).then(response => {
+            window.location.reload();
+        });
     }
 
-    function hideAddVariant() {
-        document.getElementById('add-variant-btn').classList.remove('hidden');
-        document.getElementById('add-variant-form').classList.add('hidden');
-        document.getElementById('new-variant-name').value = '';
-    }
+    function addNewColumn() {
+        const name = document.getElementById('new-column-name').value.trim();
+        const color = document.getElementById('new-column-color').value;
 
-    function submitAddVariant() {
-        const name = document.getElementById('new-variant-name').value.trim();
         if (!name) {
-            hideAddVariant();
+            alert('Introduceți un nume pentru coloană');
+            document.getElementById('new-column-name').focus();
             return;
         }
 
@@ -203,19 +166,15 @@
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
             },
-            body: 'name=' + encodeURIComponent(name)
+            body: 'name=' + encodeURIComponent(name) + '&color=' + encodeURIComponent(color)
         }).then(response => {
-            if (response.headers.get('HX-Redirect')) {
-                window.location.href = response.headers.get('HX-Redirect');
-            } else {
-                window.location.reload();
-            }
+            window.location.reload();
         });
     }
 
-    document.getElementById('new-variant-name')?.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') submitAddVariant();
-        if (e.key === 'Escape') hideAddVariant();
+    // Enter key to add column
+    document.getElementById('new-column-name')?.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') addNewColumn();
     });
 
     // Reinitialize icons after HTMX swap
